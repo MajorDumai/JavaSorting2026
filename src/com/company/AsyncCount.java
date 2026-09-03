@@ -33,45 +33,41 @@ public class AsyncCount {
         }
     }
 
-    public static void count(List<Car> carList, Car targetCar) {
+    public static int count(List<Car> carList, Car targetCar) {
         assert carList != null && targetCar != null : "AsyncCount.count(): null argument";
         if (carList.isEmpty()) {
             System.err.println("AsyncCount.count(): The carList is empty");
-            return;
+            return 0;
         }
-        final Thread thread = new Thread(() -> {
-            final int listSize = carList.size();
-            final int threadsPreferred = (int) Math.ceil((double) listSize / SUBLIST_SIZE);
-            final int threadsAvailable = Math.max(Runtime.getRuntime().availableProcessors() - RESERVED_THREADS, 1);
-            final int threadsToUse = Math.min(threadsPreferred, threadsAvailable);
-            try (ExecutorService executor = Executors.newFixedThreadPool(threadsToUse)) {
-                final List<Integer> starts = new LinkedList<>();
-                final List<CountCallable> taskList = new LinkedList<>();
-                final List<Future<Integer>> resultList;
-                final int totalResult;
-                for (int nextStart = 0; nextStart < listSize; nextStart += SUBLIST_SIZE) {
-                    starts.add(nextStart);
-                }
-                starts.forEach(start -> {
-                    final int end = Math.min(start + SUBLIST_SIZE, listSize);
-                    taskList.add(new CountCallable(carList.subList(start, end), targetCar));
-                });
-                try {
-                    resultList = executor.invokeAll(taskList);
-                } catch (InterruptedException e) {
-                    System.err.printf("AsyncCount.count(): %s", e.getMessage());
-                    return;
-                }
-                totalResult = resultList.stream().mapToInt(future -> {
-                    try {
-                        return future.get();
-                    } catch (ExecutionException | InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }).sum();
-                System.out.printf("%s has been found in the records %d times\n", targetCar, totalResult);
+        final int listSize = carList.size();
+        final int threadsPreferred = (int) Math.ceil((double) listSize / SUBLIST_SIZE);
+        final int threadsAvailable = Math.max(Runtime.getRuntime().availableProcessors() - RESERVED_THREADS, 1);
+        final int threadsToUse = Math.min(threadsPreferred, threadsAvailable);
+        try (ExecutorService executor = Executors.newFixedThreadPool(threadsToUse)) {
+            final List<Integer> starts = new LinkedList<>();
+            final List<CountCallable> taskList = new LinkedList<>();
+            final List<Future<Integer>> resultList;
+            final int totalResult;
+            for (int nextStart = 0; nextStart < listSize; nextStart += SUBLIST_SIZE) {
+                starts.add(nextStart);
             }
-        });
-        thread.start();
+            starts.forEach(start -> {
+                final int end = Math.min(start + SUBLIST_SIZE, listSize);
+                taskList.add(new CountCallable(carList.subList(start, end), targetCar));
+            });
+            try {
+                resultList = executor.invokeAll(taskList);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            totalResult = resultList.stream().mapToInt(future -> {
+                try {
+                    return future.get();
+                } catch (ExecutionException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }).sum();
+            return totalResult;
+        }
     }
 }
