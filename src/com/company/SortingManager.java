@@ -1,220 +1,131 @@
 package com.company;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Comparator;
 
 public class SortingManager<T> {
 
-    private Ignorer<T> ignorer;
+    private final Ignorer<T> ignorer;
 
     public SortingManager(Ignorer<T> ignorer) {
         this.ignorer = ignorer;
     }
 
-    boolean isIgnorable(T x){
-        if (ignorer!=null) return ignorer.isIgnorable(x);
+    private boolean isIgnorable(T value) {
+        if (ignorer != null) {
+            return ignorer.isIgnorable(value);
+        }
         return false;
     }
-    private T getPivot(ArrayList<Comparable <T>> arr, int start, int end)
-    {
+
+    private int flexibleCompare(T a, T b, Comparator<? super T> comparator) {
+        if (comparator != null) {
+            return comparator.compare(a, b);
+        } else {
+            return ((Comparable<T>) a).compareTo(b);
+        }
+    }
+
+    private T getPivot(List<T> list, int start, int end, Comparator<? super T> comparator) {
         int prev;
 
-        for(prev=start; prev<=end;++prev)
-            if(!isIgnorable((T)arr.get(prev))) break;
+        for (prev = start; prev <= end; ++prev) {
+            if (!isIgnorable(list.get(prev))) {
+                break;
+            }
+        }
 
-        if (prev>end) return null;
+        if (prev > end) {
+            return null;
+        }
 
-        int ascLeft=prev, ascLen=1, descLeft=prev, descLen=1;
-        int bestStart=prev, bestEnd=prev, bestLen=1;
+        int ascLeft = prev, ascLen = 1, descLeft = prev, descLen = 1;
+        int bestStart = prev, bestEnd = prev, bestLen = 1;
 
-        for(int i=prev+1; i<=end;++i)
-            if (!isIgnorable((T)arr.get(i))){
-                int c=arr.get(prev).compareTo((T)arr.get(i));
-                if (c>0){
-                    ascLeft=i;
-                    ascLen=1;
+        for (int i = prev + 1; i <= end; ++i) {
+            if (!isIgnorable(list.get(i))) {
+                int c = flexibleCompare(list.get(i - 1), list.get(i), comparator);
+                if (c > 0) {
+                    ascLeft = i;
+                    ascLen = 1;
                     descLen++;
-                    if(descLen>bestLen)
-                    {
-                        bestLen=descLen;
-                        bestStart=descLeft;
-                        bestEnd=i;
+                    if (descLen > bestLen) {
+                        bestLen = descLen;
+                        bestStart = descLeft;
+                        bestEnd = i;
                     }
-                }
-                else if(c<0)
-                {
-                    descLeft=i;
-                    descLen=1;
+                } else if (c < 0) {
+                    descLeft = i;
+                    descLen = 1;
                     ascLen++;
-                    if(ascLen>bestLen)
-                    {
-                        bestLen=ascLen;
-                        bestStart=ascLeft;
-                        bestEnd=i;
+                    if (ascLen > bestLen) {
+                        bestLen = ascLen;
+                        bestStart = ascLeft;
+                        bestEnd = i;
                     }
-                }
-                else
-                {
+                } else {
                     ascLen++;
-                    if(ascLen>bestLen)
-                    {
-                        bestLen=ascLen;
-                        bestStart=ascLeft;
-                        bestEnd=i;
+                    if (ascLen > bestLen) {
+                        bestLen = ascLen;
+                        bestStart = ascLeft;
+                        bestEnd = i;
                     }
                     descLen++;
-                    if(descLen>bestLen)
-                    {
-                        bestLen=descLen;
-                        bestStart=descLeft;
-                        bestEnd=i;
+                    if (descLen > bestLen) {
+                        bestLen = descLen;
+                        bestStart = descLeft;
+                        bestEnd = i;
                     }
                 }
             }
-        if(ignorer==null) {
-            return (T) arr.get((bestStart + bestEnd) / 2);
         }
-        else{
-            int index=(bestStart + bestEnd) / 2, offset=0;
+        if (ignorer == null) {
+            return list.get((bestStart + bestEnd) / 2);
+        } else {
+            int index = (bestStart + bestEnd) / 2, offset = 0;
             while (true) {
-                if(index-offset>=start && !isIgnorable((T)arr.get(index-offset)))
-                    return (T)arr.get(index-offset);
-                if(index+offset<=end && !isIgnorable((T)arr.get(index+offset)))
-                    return (T)arr.get(index+offset);
+                if (index - offset >= start && !isIgnorable(list.get(index - offset))) {
+                    return list.get(index - offset);
+                }
+                if (index + offset <= end && !isIgnorable(list.get(index + offset))) {
+                    return list.get(index + offset);
+                }
                 offset++;
             }
         }
     }
 
-    private void myQSort(ArrayList<Comparable <T>> arr, int start, int end)
-    {
-        if(start<end)
-        {
-            T x=getPivot(arr,start,end);
-            if(x==null) return;
+    private void sort(List<T> list, int start, int end, Comparator<? super T> comparator) {
+        if (start < end) {
+            T pivot = getPivot(list, start, end, comparator);
+            if (pivot == null) return;
 
-            int left=start, right=end;
-            while (left<right)
-            {
-                while(isIgnorable((T)arr.get(left)) || arr.get(left).compareTo(x)<0)++left;
-                while(isIgnorable((T)arr.get(right)) || arr.get(right).compareTo(x)>0)--right;
-                if (left<=right){
-                    T t=(T)arr.get(left);
-                    arr.set(left,arr.get(right));
-                    arr.set(right,(Comparable <T>)t);
+            int left = start, right = end;
+
+            while (left < right) {
+                while (isIgnorable(list.get(left)) || flexibleCompare(list.get(left), pivot, comparator) < 0) {
+                    ++left;
+                }
+                while (isIgnorable(list.get(left)) || flexibleCompare(list.get(right), pivot, comparator) > 0) {
+                    --right;
+                }
+                if (left <= right) {
+                    T temp = list.get(left);
+                    list.set(left, list.get(right));
+                    list.set(right, temp);
                     ++left;
                     --right;
                 }
             }
-            myQSort(arr, start, right);
-            myQSort(arr, left, end);
+            sort(list, start, right, comparator);
+            sort(list, left, end, comparator);
         }
     }
 
-    private T getPivotWithComparator(ArrayList<T> arr, int start, int end, Comparator<? super T> cmp)
-    {
-        int prev;
-
-        for(prev=start; prev<=end;++prev)
-            if(!isIgnorable((T)arr.get(prev))) break;
-
-        if (prev>end) return null;
-
-        int ascLeft=prev, ascLen=1, descLeft=prev, descLen=1;
-        int bestStart=prev, bestEnd=prev, bestLen=1;
-
-        for(int i=prev+1; i<=end;++i)
-            if (!isIgnorable((T)arr.get(i))) {
-                int c=cmp.compare(arr.get(i-1), arr.get(i));
-                if (c>0){
-                    ascLeft=i;
-                    ascLen=1;
-                    descLen++;
-                    if(descLen>bestLen)
-                    {
-                        bestLen=descLen;
-                        bestStart=descLeft;
-                        bestEnd=i;
-                    }
-                }
-                else if(c<0)
-                {
-                    descLeft=i;
-                    descLen=1;
-                    ascLen++;
-                    if(ascLen>bestLen)
-                    {
-                        bestLen=ascLen;
-                        bestStart=ascLeft;
-                        bestEnd=i;
-                    }
-                }
-                else
-                {
-                    ascLen++;
-                    if(ascLen>bestLen)
-                    {
-                        bestLen=ascLen;
-                        bestStart=ascLeft;
-                        bestEnd=i;
-                    }
-                    descLen++;
-                    if(descLen>bestLen)
-                    {
-                        bestLen=descLen;
-                        bestStart=descLeft;
-                        bestEnd=i;
-                    }
-                }
-            }
-        if(ignorer==null) {
-            return (T) arr.get((bestStart + bestEnd) / 2);
+    public void sort(List<T> list, Comparator<? super T> comparator) {
+        if (list==null){
+            throw new NullPointerException("Sorting manager can't sort a non-existing (null) list.");
         }
-        else{
-            int index=(bestStart + bestEnd) / 2, offset=0;
-            while (true) {
-                if(index-offset>=start && !isIgnorable(arr.get(index-offset)))
-                    return arr.get(index-offset);
-                if(index+offset<=end && !isIgnorable(arr.get(index+offset)))
-                    return arr.get(index+offset);
-                offset++;
-            }
-        }
+        sort(list, 0, list.size() - 1, comparator);
     }
-
-    private void myQSortWithComparator(ArrayList<T> arr, int start, int end, Comparator<? super T> cmp)
-    {
-        if(start<end)
-        {
-            T x=getPivotWithComparator(arr, start, end, cmp);
-            if(x==null) return;
-
-            int left=start, right=end;
-
-            while (left<right)
-            {
-                while(isIgnorable(arr.get(left)) || cmp.compare(arr.get(left),x)<0)++left;
-                while(isIgnorable(arr.get(right)) || cmp.compare(arr.get(right),x)>0)--right;
-                if (left<=right){
-                    T t=arr.get(left);
-                    arr.set(left,arr.get(right));
-                    arr.set(right,t);
-                    ++left;
-                    --right;
-                }
-            }
-            myQSortWithComparator(arr, start, right,cmp);
-            myQSortWithComparator(arr, left, end,cmp);
-        }
-    }
-
-    public void mySort(ArrayList<T> arr, Comparator<? super T> cmp)
-    {
-        if (cmp==null)
-            myQSort((ArrayList<Comparable<T>>) arr,0, arr.size()-1);
-        else
-            myQSortWithComparator(arr,0, arr.size()-1,cmp);
-    }
-
-
 }
