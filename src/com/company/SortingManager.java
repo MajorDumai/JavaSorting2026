@@ -106,7 +106,7 @@ public class SortingManager<T> {
                 while (isIgnorable(list.get(left)) || flexibleCompare(list.get(left), pivot, comparator) < 0) {
                     ++left;
                 }
-                while (isIgnorable(list.get(left)) || flexibleCompare(list.get(right), pivot, comparator) > 0) {
+                while (isIgnorable(list.get(right)) || flexibleCompare(list.get(right), pivot, comparator) > 0) {
                     --right;
                 }
                 if (left <= right) {
@@ -123,7 +123,7 @@ public class SortingManager<T> {
     }
 
     public void sort(List<T> list, Comparator<? super T> comparator) {
-        if (list==null){
+        if (list == null) {
             throw new NullPointerException("Sorting manager can't sort a non-existing (null) list.");
         }
         sort(list, 0, list.size() - 1, comparator);
