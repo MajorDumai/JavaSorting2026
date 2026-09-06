@@ -1,5 +1,6 @@
 package com.company;
 
+import java.util.Comparator;
 import java.util.Objects;
 
 public class Car {
@@ -14,8 +15,33 @@ public class Car {
         this.year = year;
     }
 
+    public static final Comparator<Car> BY_YEAR = Comparator.comparingInt(Car::getYear);
+    public static final Comparator<Car> BY_POWER = Comparator.comparingDouble(Car::getPower);
+    public static final Comparator<Car> BY_MODEL = Comparator.comparing(Car::getModel, String.CASE_INSENSITIVE_ORDER);
+
     public static CarBuilder builder() {
         return new CarBuilder();
+    }
+
+    public CarBuilder toBuilder(){
+        return new CarBuilder()
+                .power(this.power)
+                .model(this.model)
+                .year(this.year);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (!(o instanceof Car car)) return false;
+        return Double.compare(power, car.power) == 0
+                && year == car.year
+                && Objects.equals(model, car.model);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(power, model, year);
     }
 
     public double getPower() {
@@ -28,23 +54,6 @@ public class Car {
 
     public int getYear() {
         return year;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-
-        if (this == o) return true;
-
-        if (!(o instanceof Car car)) return false;
-
-        return Double.compare(power, car.power) == 0
-                && year == car.year
-                && Objects.equals(model, car.model);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(power, model, year);
     }
 
     public static class CarBuilder {
