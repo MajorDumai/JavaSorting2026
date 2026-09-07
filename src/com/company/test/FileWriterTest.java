@@ -1,7 +1,7 @@
 package com.company.test;
 
 import com.company.Car;
-import com.company.sorting.ThatSortingThing;
+import com.company.SortingManager;
 import com.company.util.FileWriterUtil;
 
 import java.io.IOException;
@@ -32,7 +32,7 @@ public class FileWriterTest {
                 .year(2022)
                 .build();
 
-        ArrayList<Car> cars = new ArrayList<>();
+        List<Car> cars = new ArrayList<>();
         cars.add(car1);
         cars.add(car2);
         cars.add(car3);
@@ -40,16 +40,16 @@ public class FileWriterTest {
         String fileName = "sorted_cars.json";
 
         System.out.println("Тест 1: Запись отсортированных по модели автомобилей");
-        ThatSortingThing<Car> sorter = new ThatSortingThing<>(null);
-        sorter.mySort(cars, Comparator.comparing(Car::getModel));
+        SortingManager<Car> sorter = new SortingManager<>(null);
+        sorter.sort(cars, Comparator.comparing(Car::getModel));
         FileWriterUtil.appendCollectionToJson(fileName, cars, "Сортировка по модели");
 
         System.out.println("\nТест 2: Запись отсортированных по году автомобилей");
-        sorter.mySort(cars, Comparator.comparing(Car::getYear));
+        sorter.sort(cars, Comparator.comparing(Car::getYear));
         FileWriterUtil.appendCollectionToJson(fileName, cars, "Сортировка по году");
 
         System.out.println("\nТест 3: Запись отсортированных по мощности автомобилей");
-        sorter.mySort(cars, Comparator.comparing(Car::getPower));
+        sorter.sort(cars, Comparator.comparing(Car::getPower));
         FileWriterUtil.appendCollectionToJson(fileName, cars, "Сортировка по мощности");
 
         System.out.println("\nЧтение всех записей из файла");
