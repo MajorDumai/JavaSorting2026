@@ -1,7 +1,6 @@
 package com.company;
 
 import java.util.AbstractList;
-import java.util.function.Function;
 
 public class CustomList<E> extends AbstractList<E> {
     private final int pageSize;
@@ -25,39 +24,56 @@ public class CustomList<E> extends AbstractList<E> {
         private int count = 0;
         private Page nextPage = null;
 
-        private Page(int size) {
+        public Page(int size) {
             array = new Object[size];
             this.size = size;
         }
 
-        private void add(int index, E element) {
-            if (index == size) {
-                newPage();
-                nextPage.add(0, element);
+        public boolean add(E element) {
+            if (nextPage != null) {
+                return nextPage.add(element);
             } else {
-                E old = (E) array[index];
-                while (index <= count) {
-                    array[index++] = element;
-                    if (index < size) {
-                        element = old;
-                        old = (E) array[index];
+                try {
+                    if (count == size) {
+                        nextPage = new Page(size);
+                        lastPage = nextPage;
+                        return nextPage.add(element);
+                    } else {
+                        array[count++] = element;
+                        return true;
                     }
-                }
-                if (count == size) {
-                    if (nextPage == null) {
-                        newPage();
-                    }
-                    nextPage.add(0, old);
-                } else {
-                    count++;
+                } catch (RuntimeException e) {
+                    checkEmptyPage();
+                    return false;
                 }
             }
         }
 
-        private boolean remove(Object o) {
+        public boolean remove(Object o) {
             for (int i = 0; i < count; i++) {
                 if (o.equals(array[i])) {
-                    remove(i);
+                    while (i < count) {
+                        array[i] = array[i + 1];
+                        i++;
+                        if (i == size - 1) {
+                            final E next;
+                            if (nextPage != null) {
+                                next = nextPage.get(0);
+                                nextPage.remove(next);
+                                checkEmptyPage();
+                                if (nextPage == null) {
+                                    count++;
+                                }
+                            } else {
+                                next = null;
+                            }
+                            array[i] = next;
+                            break;
+                        }
+                    }
+                    if (nextPage == null) {
+                        count--;
+                    }
                     return true;
                 }
             }
@@ -70,70 +86,47 @@ public class CustomList<E> extends AbstractList<E> {
             }
         }
 
-        private E remove(int index) {
-            E old = (E) array[index];
-            while (index < count && index < size - 1) {
-                array[index] = array[index + 1];
-                index++;
+        public E set(int index, E e) {
+            if (index >= size) {
+                return nextPage.get(index - size);
+            } else {
+                final E old = (E) array[index];
+                array[index] = e;
+                return old;
             }
-            if (index == size - 1) {
-                final E next;
-                if (nextPage != null) {
-                    next = nextPage.get(0);
-                    nextPage.remove(next);
-                    checkEmptyPage();
-                    count++;
-                } else {
-                    next = null;
-                }
-                array[index] = next;
-            }
-            count--;
-            return old;
         }
 
-        private E set(int index, E element) {
-            final E old = (E) array[index];
-            array[index] = element;
-            return old;
-        }
-
-        private E get(int index) {
-            return (E) array[index];
+        public E get(int index) {
+            if (index >= size) {
+                return nextPage.get(index - size);
+            } else {
+                return (E) array[index];
+            }
         }
 
         private void checkEmptyPage() {
-            if (nextPage.count == 0) {
+            if (nextPage.isEmpty()) {
                 nextPage = null;
                 lastPage = this;
             }
         }
 
-        private void newPage() {
-            nextPage = new Page(size);
-            lastPage = nextPage;
+        public boolean isEmpty() {
+            return count == 0;
+        }
+
+        public Page getNextPage() {
+            return nextPage;
         }
     }
 
     @Override
-    public void add(int index, E element) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException();
+    public boolean add(E element) {
+        final boolean added = lastPage.add(element);
+        if (added) {
+            size++;
         }
-        final Page page = getPage(index);
-        while (index > pageSize) {
-            index -= pageSize;
-        }
-        page.add(index, element);
-        size++;
-    }
-
-    @Override
-    public E remove(int index) {
-        final int indexInPage = index % pageSize;
-        E old = doOnPage(index, page -> page.remove(indexInPage));
-        size--;
-        return old;
+        return added;
     }
 
     @Override
@@ -147,8 +140,15 @@ public class CustomList<E> extends AbstractList<E> {
 
     @Override
     public E set(int index, E element) {
-        final int indexInPage = index % pageSize;
-        return doOnPage(index, page -> page.set(indexInPage, element));
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException();
+        }
+        Page currentPage = firstPage;
+        while (index >= pageSize) {
+            currentPage = currentPage.getNextPage();
+            index -= pageSize;
+        }
+        return currentPage.set(index, element);
     }
 
     @Override
@@ -157,31 +157,20 @@ public class CustomList<E> extends AbstractList<E> {
     }
 
     @Override
-    public E get(int index) {
-        final int indexInPage = index % pageSize;
-        return doOnPage(index, page -> page.get(indexInPage));
+    public boolean isEmpty() {
+        return size == 0;
     }
 
-    private <T> T doOnPage(int index, Function<Page, T> action) {
-        if (index < 0 || index >= size) {
+    @Override
+    public E get(int index) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException();
         }
-        Page page = getPage(index);
-        return action.apply(page);
-    }
-
-    private Page getPage(int index) {
-        Page page;
-        final int pagesForward = index / pageSize;
-        final int pagesTotal = size / pageSize;
-        if (pagesForward == pagesTotal) {
-            page = lastPage;
-        } else {
-            page = firstPage;
-            for (int i = 0; i < pagesForward; i++) {
-                page = page.nextPage;
-            }
+        Page currentPage = firstPage;
+        while (index >= pageSize) {
+            currentPage = currentPage.getNextPage();
+            index -= pageSize;
         }
-        return page;
+        return currentPage.get(index);
     }
 }
