@@ -1,6 +1,6 @@
 package com.company.test;
 
-import com.company.model.Car;
+import com.company.Car;
 import com.company.sorting.ThatSortingThing;
 import com.company.util.FileWriterUtil;
 
@@ -14,22 +14,22 @@ public class FileWriterTest {
     public static void main(String[] args) {
         System.out.println("Тестирование записи в JSON\n");
 
-        Car car1 = new Car.Builder()
-                .setPower(150)
-                .setModel("Toyota Camry")
-                .setYear(2020)
+        Car car1 = Car.builder()
+                .power(150)
+                .model("Toyota Camry")
+                .year(2020)
                 .build();
 
-        Car car2 = new Car.Builder()
-                .setPower(200)
-                .setModel("BMW X5")
-                .setYear(2021)
+        Car car2 = Car.builder()
+                .power(200)
+                .model("BMW X5")
+                .year(2021)
                 .build();
 
-        Car car3 = new Car.Builder()
-                .setPower(120)
-                .setModel("Lada Vesta")
-                .setYear(2022)
+        Car car3 = Car.builder()
+                .power(120)
+                .model("Lada Vesta")
+                .year(2022)
                 .build();
 
         ArrayList<Car> cars = new ArrayList<>();
