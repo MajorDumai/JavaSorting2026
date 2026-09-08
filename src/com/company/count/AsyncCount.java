@@ -1,4 +1,4 @@
-package com.company;
+package com.company.count;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -12,20 +12,20 @@ public class AsyncCount {
     private static final int SUBLIST_SIZE = 4;
     private static final int RESERVED_THREADS = 2;
 
-    private static class CountCallable implements Callable<Integer> {
-        private final List<Car> carList;
-        private final Car targetCar;
+    private static class CountCallable<E> implements Callable<Integer> {
+        private final List<E> list;
+        private final E target;
         private int partialCount = 0;
 
-        public CountCallable(List<Car> carList, Car targetCar) {
-            this.carList = carList;
-            this.targetCar = targetCar;
+        public CountCallable(List<E> list, E target) {
+            this.list = list;
+            this.target = target;
         }
 
         @Override
         public Integer call() {
-            for (Car car : carList) {
-                if (targetCar.equals(car)) {
+            for (E e : list) {
+                if (target.equals(e)) {
                     partialCount++;
                 }
             }
@@ -33,19 +33,24 @@ public class AsyncCount {
         }
     }
 
-    public static int count(List<Car> carList, Car targetCar) {
-        assert carList != null && targetCar != null : "AsyncCount.count(): null argument";
-        if (carList.isEmpty()) {
-            System.err.println("AsyncCount.count(): The carList is empty");
+    public static <E> int count(List<E> list, E target) {
+        if (target == null) {
+            throw new NullPointerException("AsyncCount.count(): list is null");
+        }
+        if (list == null) {
+            throw new NullPointerException("AsyncCount.count(): target is null");
+        }
+        if (list.isEmpty()) {
+            System.err.println("AsyncCount.count(): The list is empty");
             return 0;
         }
-        final int listSize = carList.size();
+        final int listSize = list.size();
         final int threadsPreferred = (int) Math.ceil((double) listSize / SUBLIST_SIZE);
         final int threadsAvailable = Math.max(Runtime.getRuntime().availableProcessors() - RESERVED_THREADS, 1);
         final int threadsToUse = Math.min(threadsPreferred, threadsAvailable);
         try (ExecutorService executor = Executors.newFixedThreadPool(threadsToUse)) {
             final List<Integer> starts = new LinkedList<>();
-            final List<CountCallable> taskList = new LinkedList<>();
+            final List<CountCallable<E>> taskList = new LinkedList<>();
             final List<Future<Integer>> resultList;
             final int totalResult;
             for (int nextStart = 0; nextStart < listSize; nextStart += SUBLIST_SIZE) {
@@ -53,7 +58,7 @@ public class AsyncCount {
             }
             starts.forEach(start -> {
                 final int end = Math.min(start + SUBLIST_SIZE, listSize);
-                taskList.add(new CountCallable(carList.subList(start, end), targetCar));
+                taskList.add(new CountCallable<>(list.subList(start, end), target));
             });
             try {
                 resultList = executor.invokeAll(taskList);
