@@ -3,9 +3,16 @@ package com.company.data;
 import java.util.List;
 
 public class CancelAction<E> implements DataProvider<E> {
+    private static final String OUTPUT_NAME = "Cancel input";
+
     @Override
     public List<E> provide() {
-        System.err.println("Data input has been canceled.");
+        System.err.println("Data input has been cancelled.");
         return List.of();
+    }
+
+    @Override
+    public String getOutputName() {
+        return OUTPUT_NAME;
     }
 }
