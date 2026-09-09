@@ -236,8 +236,7 @@ public class Main {
             return;
         }
 
-        System.out.print("Введите мощность для подсчета: ");
-        int targetPower = readInt();
+        int targetPower = DataProvider.getPositiveInt(scanner, "Введите мощность для подсчета: ");
 
         int count = 0;
         for (Car car : cars) {
@@ -247,6 +246,5 @@ public class Main {
         }
 
         System.out.println("Количество машин с мощностью " + targetPower + ": " + count);
-        System.out.println("(Временная заглушка)");
     }
 }

@@ -55,13 +55,13 @@ public class DataProvider {
             return cars;
         }
 
-        private static int getPositiveInt(Scanner scanner, String prompt) {
+        public static int getPositiveInt(Scanner scanner, String prompt) {
             while (true) {
                 System.out.println(prompt);
                 try {
                     int value = scanner.nextInt();
                     scanner.nextLine();
-                    if (value > 0 && value <1000) {
+                    if (value > 0 && value <=1000) {
                         return value;
                     } else if (value <=0 ) {
                         System.out.println("Ошибка! Мощность должна быть больше 0!");
@@ -69,7 +69,7 @@ public class DataProvider {
                         System.out.println("Ошибка! Мощность не может быть больше 1000!");
                     }
                 } catch (java.util.InputMismatchException e) {
-                    System.out.println("Ошибка! Введите целое число от 1 до 999!");
+                    System.out.println("Ошибка! Введите целое число от 1 до 1000!");
                     scanner.nextLine();
                 }
             }
