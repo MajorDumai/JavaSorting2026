@@ -120,7 +120,7 @@ public class Main {
                 break;
 
             case 3:
-                cars = DataProvider.readFromConsole();
+                cars = DataProvider.readFromConsole(scanner);
                 System.out.println("Добавлено " + cars.size() + " машин.");
                 break;
 
