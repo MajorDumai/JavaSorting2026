@@ -2,11 +2,11 @@ package com.company.data;
 
 import java.util.List;
 
-public class CancelAction<E> implements DataProvider<E> {
+public class CancelAction<T> implements DataProvider<T> {
     private static final String OUTPUT_NAME = "Cancel input";
 
     @Override
-    public List<E> provide() {
+    public List<T> provide() {
         System.err.println("Data input has been cancelled.");
         return List.of();
     }

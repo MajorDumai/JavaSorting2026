@@ -7,8 +7,19 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class ProviderStream {
-    public static <E> void addToList(List<E> list, List<DataProvider<E>> dataProviders) {
-        Supplier<DataProvider<E>> chooseStrategy = () -> {
+    public static <T> void addToList(List<T> list, List<DataProvider<T>> dataProviders) {
+        if (list == null) {
+            throw  new NullPointerException("ProviderStream.addToList(): list is null");
+        }
+        if (dataProviders == null) {
+            throw  new NullPointerException("ProviderStream.addToList(): dataProviders is null");
+        }
+        if (dataProviders.isEmpty()) {
+            System.err.println("ProviderStream.addToList(): No dataProviders given, cannot read new data");
+            return;
+        }
+
+        Supplier<DataProvider<T>> chooseStrategy = () -> {
             int providerId;
             final int size;
             dataProviders.addFirst(new CancelAction<>());
