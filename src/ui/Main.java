@@ -3,6 +3,7 @@ package ui;
 import data.DataProvider;
 import model.Car;
 import strategy.SortOption;
+import com.company.util.FileWriterUtil;
 
 import java.util.*;
 
@@ -27,31 +28,31 @@ public class Main {
 
     private void initSortOptions() {
         sortOptions.add(new SortOption(
-                "Сортировка по году (все)",
+                "РЎРѕСЂС‚РёСЂРѕРІРєР° РїРѕ РіРѕРґСѓ (РІСЃРµ)",
                 new SortingManager<>(null),
                 Car.BY_YEAR,
                 null
         ));
         sortOptions.add(new SortOption(
-                "Сортировка по году (только четные)",
+                "РЎРѕСЂС‚РёСЂРѕРІРєР° РїРѕ РіРѕРґСѓ (С‚РѕР»СЊРєРѕ С‡РµС‚РЅС‹Рµ)",
                 new SortingManager<>(Car.IGNORE_ODD_YEAR),
                 Car.BY_YEAR,
                 Car.IGNORE_ODD_YEAR
         ));
         sortOptions.add(new SortOption(
-                "Сортировка по году (только нечетные)",
+                "РЎРѕСЂС‚РёСЂРѕРІРєР° РїРѕ РіРѕРґСѓ (С‚РѕР»СЊРєРѕ РЅРµС‡РµС‚РЅС‹Рµ)",
                 new SortingManager<>(Car.IGNORE_EVEN_YEAR),
                 Car.BY_YEAR,
                 Car.IGNORE_EVEN_YEAR
         ));
         sortOptions.add(new SortOption(
-                "Сортировка по мощности (все)",
+                "РЎРѕСЂС‚РёСЂРѕРІРєР° РїРѕ РјРѕС‰РЅРѕСЃС‚Рё (РІСЃРµ)",
                 new SortingManager<>(null),
                 Car.BY_POWER,
                 null
         ));
         sortOptions.add(new SortOption(
-                "Сортировка по модели (все)",
+                "РЎРѕСЂС‚РёСЂРѕРІРєР° РїРѕ РјРѕРґРµР»Рё (РІСЃРµ)",
                 new SortingManager<>(null),
                 Car.BY_MODEL,
                 null
@@ -59,7 +60,7 @@ public class Main {
     }
 
     public void run() {
-        System.out.println("*** Добро пожаловать в программу сортировки автомобилей ***");
+        System.out.println("*** Р”РѕР±СЂРѕ РїРѕР¶Р°Р»РѕРІР°С‚СЊ РІ РїСЂРѕРіСЂР°РјРјСѓ СЃРѕСЂС‚РёСЂРѕРІРєРё Р°РІС‚РѕРјРѕР±РёР»РµР№ ***");
 
         while (true) {
             printMainMenu();
@@ -85,24 +86,24 @@ public class Main {
                     handleCountOccurrences();
                     break;
                 case 0:
-                    System.out.println("Выход из программы. До свидания!");
+                    System.out.println("Р’С‹С…РѕРґ РёР· РїСЂРѕРіСЂР°РјРјС‹. Р”Рѕ СЃРІРёРґР°РЅРёСЏ!");
                     return;
                 default:
-                    System.out.println("Неверный выбор. Попробуйте снова.");
+                    System.out.println("РќРµРІРµСЂРЅС‹Р№ РІС‹Р±РѕСЂ. РџРѕРїСЂРѕР±СѓР№С‚Рµ СЃРЅРѕРІР°.");
             }
         }
     }
 
     private void printMainMenu() {
-        System.out.println("\n=== ГЛАВНОЕ МЕНЮ ===");
-        System.out.println("1. Заполнить массив данными");
-        System.out.println("2. Выбрать вариант сортировки");
-        System.out.println("3. Выполнить сортировку");
-        System.out.println("4. Показать текущий список");
-        System.out.println("5. Записать в файл (доп. задание)");
-        System.out.println("6. Подсчитать вхождения (доп. задание)");
-        System.out.println("0. Выход");
-        System.out.print("Ваш выбор: ");
+        System.out.println("\n=== Р“Р›РђР’РќРћР• РњР•РќР® ===");
+        System.out.println("1. Р—Р°РїРѕР»РЅРёС‚СЊ РјР°СЃСЃРёРІ РґР°РЅРЅС‹РјРё");
+        System.out.println("2. Р’С‹Р±СЂР°С‚СЊ РІР°СЂРёР°РЅС‚ СЃРѕСЂС‚РёСЂРѕРІРєРё");
+        System.out.println("3. Р’С‹РїРѕР»РЅРёС‚СЊ СЃРѕСЂС‚РёСЂРѕРІРєСѓ");
+        System.out.println("4. РџРѕРєР°Р·Р°С‚СЊ С‚РµРєСѓС‰РёР№ СЃРїРёСЃРѕРє");
+        System.out.println("5. Р—Р°РїРёСЃР°С‚СЊ РІ С„Р°Р№Р» (РґРѕРї. Р·Р°РґР°РЅРёРµ)");
+        System.out.println("6. РџРѕРґСЃС‡РёС‚Р°С‚СЊ РІС…РѕР¶РґРµРЅРёСЏ (РґРѕРї. Р·Р°РґР°РЅРёРµ)");
+        System.out.println("0. Р’С‹С…РѕРґ");
+        System.out.print("Р’Р°С€ РІС‹Р±РѕСЂ: ");
     }
 
     private int readInt() {
@@ -112,124 +113,130 @@ public class Main {
                 scanner.nextLine();
                 return value;
             } catch (InputMismatchException e) {
-                System.out.println("Ошибка: введите число!");
+                System.out.println("РћС€РёР±РєР°: РІРІРµРґРёС‚Рµ С‡РёСЃР»Рѕ!");
                 scanner.nextLine();
-                System.out.print("Попробуйте снова: ");
+                System.out.print("РџРѕРїСЂРѕР±СѓР№С‚Рµ СЃРЅРѕРІР°: ");
             }
         }
     }
 
     private void handleFillData() {
-        System.out.println("\n--- Заполнение массива данными ---");
-        System.out.println("1. Случайные данные");
-        System.out.println("2. Из файла");
-        System.out.println("3. Вручную");
-        System.out.print("Выберите вариант: ");
+        System.out.println("\n--- Р—Р°РїРѕР»РЅРµРЅРёРµ РјР°СЃСЃРёРІР° РґР°РЅРЅС‹РјРё ---");
+        System.out.println("1. Р Р°РЅРґРѕРј");
+        System.out.println("2. РР· С„Р°Р№Р»Р°");
+        System.out.println("3. Р’СЂСѓС‡РЅСѓСЋ");
+        System.out.print("Р’С‹Р±РµСЂРёС‚Рµ РІР°СЂРёР°РЅС‚: ");
 
         int choice = readInt();
 
         switch (choice) {
             case 1:
-                System.out.print("Введите количество машин: ");
+                System.out.print("Р’РІРµРґРёС‚Рµ РєРѕР»РёС‡РµСЃС‚РІРѕ РјР°С€РёРЅ: ");
                 int count = readInt();
                 if (count <= 0) {
-                    System.out.println("Количество должно быть больше 0!");
+                    System.out.println("РљРѕР»РёС‡РµСЃС‚РІРѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ 0!");
                     return;
                 }
                 cars = DataProvider.generateRandom(count);
-                System.out.println("Добавлено " + cars.size() + " машин.");
+                System.out.println("Р”РѕР±Р°РІР»РµРЅРѕ " + cars.size() + " РјР°С€РёРЅ.");
                 break;
 
             case 2:
-                System.out.print("Введите имя файла: ");
+                System.out.print("Р’РІРµРґРёС‚Рµ РёРјСЏ С„Р°Р№Р»Р°: ");
                 String fileName = scanner.nextLine();
                 cars = DataProvider.readFromFile(fileName);
-                System.out.println("Загружено " + cars.size() + " машин из файла.");
+                System.out.println("Р—Р°РіСЂСѓР¶РµРЅРѕ " + cars.size() + " РјР°С€РёРЅ РёР· С„Р°Р№Р»Р°.");
                 break;
 
             case 3:
                 cars = DataProvider.readFromConsole(scanner);
-                System.out.println("Добавлено " + cars.size() + " машин.");
+                System.out.println("Р”РѕР±Р°РІР»РµРЅРѕ " + cars.size() + " РјР°С€РёРЅ.");
                 break;
 
             default:
-                System.out.println("Неверный выбор.");
+                System.out.println("РќРµРІРµСЂРЅС‹Р№ РІС‹Р±РѕСЂ.");
         }
     }
 
     private void handleSelectSortOption() {
-        System.out.println("\n--- Выбор варианта сортировки ---");
+        System.out.println("\n--- Р’С‹Р±РѕСЂ РІР°СЂРёР°РЅС‚Р° СЃРѕСЂС‚РёСЂРѕРІРєРё ---");
 
         for (int i = 0; i < sortOptions.size(); i++) {
             System.out.println((i + 1) + ". " + sortOptions.get(i).getName());
         }
-        System.out.println("0. Отмена");
-        System.out.print("Выберите вариант: ");
+        System.out.println("0. РћС‚РјРµРЅР°");
+        System.out.print("Р’С‹Р±РµСЂРёС‚Рµ РІР°СЂРёР°РЅС‚: ");
 
         int choice = readInt();
 
         if (choice == 0) {
-            System.out.println("Отмена выбора.");
+            System.out.println("РћС‚РјРµРЅР° РІС‹Р±РѕСЂР°.");
             return;
         }
         if (choice < 1 || choice > sortOptions.size()) {
-            System.out.println("Неверный выбор.");
+            System.out.println("РќРµРІРµСЂРЅС‹Р№ РІС‹Р±РѕСЂ.");
             return;
         }
 
         selectedOption = sortOptions.get(choice - 1);
-        System.out.println("Выбран вариант: " + selectedOption.getName());
+        System.out.println("Р’С‹Р±СЂР°РЅ РІР°СЂРёР°РЅС‚: " + selectedOption.getName());
     }
 
     private void handleSort() {
         if (cars == null || cars.isEmpty()) {
-            System.out.println("Сначала заполните список!");
+            System.out.println("РЎРЅР°С‡Р°Р»Р° Р·Р°РїРѕР»РЅРёС‚Рµ СЃРїРёСЃРѕРє!");
             return;
         }
         if (selectedOption == null) {
-            System.out.println("Сначала выберите вариант сортировки (пункт 2)!");
+            System.out.println("РЎРЅР°С‡Р°Р»Р° РІС‹Р±РµСЂРёС‚Рµ РІР°СЂРёР°РЅС‚ СЃРѕСЂС‚РёСЂРѕРІРєРё (РїСѓРЅРєС‚ 2)!");
             return;
         }
 
-        System.out.println("Выполняется: " + selectedOption.getName());
+        System.out.println("Р’С‹РїРѕР»РЅСЏРµС‚СЃСЏ: " + selectedOption.getName());
         selectedOption.sort(cars);
-        System.out.println("Сортировка выполнена!");
+        System.out.println("РЎРѕСЂС‚РёСЂРѕРІРєР° РІС‹РїРѕР»РЅРµРЅР°!");
     }
 
     private void handlePrintCars() {
         if (cars == null || cars.isEmpty()) {
-            System.out.println("Список машин пуст. Заполните его!");
+            System.out.println("РЎРїРёСЃРѕРє РјР°С€РёРЅ РїСѓСЃС‚. Р—Р°РїРѕР»РЅРёС‚Рµ РµРіРѕ!");
             return;
         }
 
-        System.out.println("\n=== СПИСОК МАШИН ===");
+        System.out.println("\n=== РЎРџРРЎРћРљ РњРђРЁРРќ ===");
         for (int i = 0; i < cars.size(); i++) {
             System.out.println((i + 1) + ". " + cars.get(i));
         }
-        System.out.println("Всего: " + cars.size() + " машин.");
+        System.out.println("Р’СЃРµРіРѕ: " + cars.size() + " РјР°С€РёРЅ.");
     }
 
     private void handleWriteToFile() {
         if (cars == null || cars.isEmpty()) {
-            System.out.println("Список пуст. Нечего записывать!");
+            System.out.println("РЎРїРёСЃРѕРє РїСѓСЃС‚. РќРµС‡РµРіРѕ Р·Р°РїРёСЃС‹РІР°С‚СЊ!");
             return;
         }
 
-        System.out.print("Введите имя файла для записи: ");
+        System.out.print("Р’РІРµРґРёС‚Рµ РёРјСЏ С„Р°Р№Р»Р° РґР»СЏ Р·Р°РїРёСЃРё: ");
         String fileName = scanner.nextLine();
 
-        System.out.println("Запись в файл (заглушка): " + fileName);
-        System.out.println("(Временная заглушка) Записано " + cars.size() + " машин в файл.");
+        if (fileName == null || fileName.isBlank()) {
+            fileName = "sorted_cars.json";
+        }
+
+        FileWriterUtil.appendCollectionToJson(fileName, cars, "                     ");
+
+        System.out.println("Р—Р°РїРёСЃСЊ РІ С„Р°Р№Р» : " + fileName);
+        System.out.println("Р—Р°РїРёСЃР°РЅРѕ " + cars.size() + " РјР°С€РёРЅ РІ С„Р°Р№Р».");
     }
 
     private void handleCountOccurrences() {
         if (cars == null || cars.isEmpty()) {
-            System.out.println("Список пуст. Нечего подсчитывать!");
+            System.out.println("РЎРїРёСЃРѕРє РїСѓСЃС‚. РќРµС‡РµРіРѕ РїРѕРґСЃС‡РёС‚С‹РІР°С‚СЊ!");
             return;
         }
 
-        System.out.println("\n--- ПОДСЧЁТ ВХОЖДЕНИЙ ---");
-        int targetPower = DataProvider.getPositiveInt(scanner, "Введите мощность для подсчета: ");
+        System.out.println("\n--- РџРћР”РЎР§РЃРў Р’РҐРћР–Р”Р•РќРР™ ---");
+        int targetPower = DataProvider.getPositiveInt(scanner, "Р’РІРµРґРёС‚Рµ РјРѕС‰РЅРѕСЃС‚СЊ РґР»СЏ РїРѕРґСЃС‡РµС‚Р°: ");
 
         int count = 0;
         for (Car car : cars) {
@@ -239,9 +246,9 @@ public class Main {
         }
 
         if (count == 0) {
-            System.out.println("Машин с мощностью " + targetPower + " л.с. не найдено.");
+            System.out.println("РњР°С€РёРЅ СЃ РјРѕС‰РЅРѕСЃС‚СЊСЋ " + targetPower + " РЅРµ РЅР°Р№РґРµРЅРѕ.");
         } else {
-            System.out.println("Количество машин с мощностью " + targetPower + ": " + count);
+            System.out.println("РљРѕР»РёС‡РµСЃС‚РІРѕ РјР°С€РёРЅ СЃ РјРѕС‰РЅРѕСЃС‚СЊСЋ " + targetPower + ": " + count);
         }
     }
 }
