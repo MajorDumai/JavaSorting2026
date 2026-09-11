@@ -1,25 +1,25 @@
 package ui;
 
-import comparator.TempComparator;
 import data.DataProvider;
 import model.Car;
-import strategy.SortingStrategy;
-import strategy.TempStrategy;
+import strategy.SortOption;
+import com.company.util.FileWriterUtil;
 
 import java.util.*;
-import java.util.List;
 
 import com.company.util.FileWriterUtil;
 public class Main {
 
     private List<Car> cars;
-    private SortingStrategy currentStrategy;
-    private Comparator<Car> currentComparator;
+    private List<SortOption> sortOptions;
+    private SortOption selectedOption;
     private Scanner scanner;
 
     public Main() {
         this.cars = new ArrayList<>();
         this.scanner = new Scanner(System.in);
+        this.sortOptions = new ArrayList<>();
+        initSortOptions();
     }
 
     public static void main(String[] args) {
@@ -27,8 +27,41 @@ public class Main {
         app.run();
     }
 
+    private void initSortOptions() {
+        sortOptions.add(new SortOption(
+                "ГђВЎГђВѕГ‘ВЂГ‘В‚ГђВёГ‘ВЂГђВѕГђВІГђВєГђВ° ГђВїГђВѕ ГђВіГђВѕГђВґГ‘Вѓ (ГђВІГ‘ВЃГђВµ)",
+                new SortingManager<>(null),
+                Car.BY_YEAR,
+                null
+        ));
+        sortOptions.add(new SortOption(
+                "ГђВЎГђВѕГ‘ВЂГ‘В‚ГђВёГ‘ВЂГђВѕГђВІГђВєГђВ° ГђВїГђВѕ ГђВіГђВѕГђВґГ‘Вѓ (Г‘В‚ГђВѕГђВ»Г‘ВЊГђВєГђВѕ Г‘В‡ГђВµГ‘В‚ГђВЅГ‘В‹ГђВµ)",
+                new SortingManager<>(Car.IGNORE_ODD_YEAR),
+                Car.BY_YEAR,
+                Car.IGNORE_ODD_YEAR
+        ));
+        sortOptions.add(new SortOption(
+                "ГђВЎГђВѕГ‘ВЂГ‘В‚ГђВёГ‘ВЂГђВѕГђВІГђВєГђВ° ГђВїГђВѕ ГђВіГђВѕГђВґГ‘Вѓ (Г‘В‚ГђВѕГђВ»Г‘ВЊГђВєГђВѕ ГђВЅГђВµГ‘В‡ГђВµГ‘В‚ГђВЅГ‘В‹ГђВµ)",
+                new SortingManager<>(Car.IGNORE_EVEN_YEAR),
+                Car.BY_YEAR,
+                Car.IGNORE_EVEN_YEAR
+        ));
+        sortOptions.add(new SortOption(
+                "ГђВЎГђВѕГ‘ВЂГ‘В‚ГђВёГ‘ВЂГђВѕГђВІГђВєГђВ° ГђВїГђВѕ ГђВјГђВѕГ‘В‰ГђВЅГђВѕГ‘ВЃГ‘В‚ГђВё (ГђВІГ‘ВЃГђВµ)",
+                new SortingManager<>(null),
+                Car.BY_POWER,
+                null
+        ));
+        sortOptions.add(new SortOption(
+                "ГђВЎГђВѕГ‘ВЂГ‘В‚ГђВёГ‘ВЂГђВѕГђВІГђВєГђВ° ГђВїГђВѕ ГђВјГђВѕГђВґГђВµГђВ»ГђВё (ГђВІГ‘ВЃГђВµ)",
+                new SortingManager<>(null),
+                Car.BY_MODEL,
+                null
+        ));
+    }
+
     public void run() {
-        System.out.println("*** Добро пожаловать в программу сортировки автомобилей ***");
+        System.out.println("*** ГђВ”ГђВѕГђВ±Г‘ВЂГђВѕ ГђВїГђВѕГђВ¶ГђВ°ГђВ»ГђВѕГђВІГђВ°Г‘В‚Г‘ВЊ ГђВІ ГђВїГ‘ВЂГђВѕГђВіГ‘ВЂГђВ°ГђВјГђВјГ‘Вѓ Г‘ВЃГђВѕГ‘ВЂГ‘В‚ГђВёГ‘ВЂГђВѕГђВІГђВєГђВё ГђВ°ГђВІГ‘В‚ГђВѕГђВјГђВѕГђВ±ГђВёГђВ»ГђВµГђВ№ ***");
 
         while (true) {
             printMainMenu();
@@ -39,43 +72,39 @@ public class Main {
                     handleFillData();
                     break;
                 case 2:
-                    handleSelectStrategy();
+                    handleSelectSortOption();
                     break;
                 case 3:
-                    handleSelectComparator();
-                    break;
-                case 4:
                     handleSort();
                     break;
-                case 5:
+                case 4:
                     handlePrintCars();
                     break;
-                case 6:
+                case 5:
                     handleWriteToFile();
                     break;
-                case 7:
+                case 6:
                     handleCountOccurrences();
                     break;
                 case 0:
-                    System.out.println("Выход из программы. До свидания!");
+                    System.out.println("ГђВ’Г‘В‹Г‘В…ГђВѕГђВґ ГђВёГђВ· ГђВїГ‘ВЂГђВѕГђВіГ‘ВЂГђВ°ГђВјГђВјГ‘В‹. ГђВ”ГђВѕ Г‘ВЃГђВІГђВёГђВґГђВ°ГђВЅГђВёГ‘ВЏ!");
                     return;
                 default:
-                    System.out.println("Неверный выбор. Попробуйте снова.");
+                    System.out.println("ГђВќГђВµГђВІГђВµГ‘ВЂГђВЅГ‘В‹ГђВ№ ГђВІГ‘В‹ГђВ±ГђВѕГ‘ВЂ. ГђВџГђВѕГђВїГ‘ВЂГђВѕГђВ±Г‘ВѓГђВ№Г‘В‚ГђВµ Г‘ВЃГђВЅГђВѕГђВІГђВ°.");
             }
         }
     }
 
     private void printMainMenu() {
-        System.out.println("\n=== ГЛАВНОЕ МЕНЮ ===");
-        System.out.println("1. Заполнить массив данными");
-        System.out.println("2. Выбрать стратегию сортировки");
-        System.out.println("3. Выбрать поле для сортировки");
-        System.out.println("4. Выполнить сортировку");
-        System.out.println("5. Показать текущий список");
-        System.out.println("6. Записать в файл (доп. задание)");
-        System.out.println("7. Подсчитать вхождения (доп. задание)");
-        System.out.println("0. Выход");
-        System.out.print("Ваш выбор: ");
+        System.out.println("\n=== ГђВ“ГђВ›ГђВђГђВ’ГђВќГђВћГђВ• ГђВњГђВ•ГђВќГђВ® ===");
+        System.out.println("1. ГђВ—ГђВ°ГђВїГђВѕГђВ»ГђВЅГђВёГ‘В‚Г‘ВЊ ГђВјГђВ°Г‘ВЃГ‘ВЃГђВёГђВІ ГђВґГђВ°ГђВЅГђВЅГ‘В‹ГђВјГђВё");
+        System.out.println("2. ГђВ’Г‘В‹ГђВ±Г‘ВЂГђВ°Г‘В‚Г‘ВЊ ГђВІГђВ°Г‘ВЂГђВёГђВ°ГђВЅГ‘В‚ Г‘ВЃГђВѕГ‘ВЂГ‘В‚ГђВёГ‘ВЂГђВѕГђВІГђВєГђВё");
+        System.out.println("3. ГђВ’Г‘В‹ГђВїГђВѕГђВ»ГђВЅГђВёГ‘В‚Г‘ВЊ Г‘ВЃГђВѕГ‘ВЂГ‘В‚ГђВёГ‘ВЂГђВѕГђВІГђВєГ‘Вѓ");
+        System.out.println("4. ГђВџГђВѕГђВєГђВ°ГђВ·ГђВ°Г‘В‚Г‘ВЊ Г‘В‚ГђВµГђВєГ‘ВѓГ‘В‰ГђВёГђВ№ Г‘ВЃГђВїГђВёГ‘ВЃГђВѕГђВє");
+        System.out.println("5. ГђВ—ГђВ°ГђВїГђВёГ‘ВЃГђВ°Г‘В‚Г‘ВЊ ГђВІ Г‘В„ГђВ°ГђВ№ГђВ» (ГђВґГђВѕГђВї. ГђВ·ГђВ°ГђВґГђВ°ГђВЅГђВёГђВµ)");
+        System.out.println("6. ГђВџГђВѕГђВґГ‘ВЃГ‘В‡ГђВёГ‘В‚ГђВ°Г‘В‚Г‘ВЊ ГђВІГ‘В…ГђВѕГђВ¶ГђВґГђВµГђВЅГђВёГ‘ВЏ (ГђВґГђВѕГђВї. ГђВ·ГђВ°ГђВґГђВ°ГђВЅГђВёГђВµ)");
+        System.out.println("0. ГђВ’Г‘В‹Г‘В…ГђВѕГђВґ");
+        System.out.print("ГђВ’ГђВ°Г‘В€ ГђВІГ‘В‹ГђВ±ГђВѕГ‘ВЂ: ");
     }
 
     private int readInt() {
@@ -85,165 +114,130 @@ public class Main {
                 scanner.nextLine();
                 return value;
             } catch (InputMismatchException e) {
-                System.out.println("? Ошибка: введите число!");
+                System.out.println("ГђВћГ‘В€ГђВёГђВ±ГђВєГђВ°: ГђВІГђВІГђВµГђВґГђВёГ‘В‚ГђВµ Г‘В‡ГђВёГ‘ВЃГђВ»ГђВѕ!");
                 scanner.nextLine();
-                System.out.print("Попробуйте снова: ");
+                System.out.print("ГђВџГђВѕГђВїГ‘ВЂГђВѕГђВ±Г‘ВѓГђВ№Г‘В‚ГђВµ Г‘ВЃГђВЅГђВѕГђВІГђВ°: ");
             }
         }
     }
 
     private void handleFillData() {
-        System.out.println("\n--- Заполнение массива данными ---");
-        System.out.println("1. Случайные данные");
-        System.out.println("2. Из файла");
-        System.out.println("3. Вручную");
-        System.out.print("Выберите вариант: ");
+        System.out.println("\n--- ГђВ—ГђВ°ГђВїГђВѕГђВ»ГђВЅГђВµГђВЅГђВёГђВµ ГђВјГђВ°Г‘ВЃГ‘ВЃГђВёГђВІГђВ° ГђВґГђВ°ГђВЅГђВЅГ‘В‹ГђВјГђВё ---");
+        System.out.println("1. ГђВ ГђВ°ГђВЅГђВґГђВѕГђВј");
+        System.out.println("2. ГђВГђВ· Г‘В„ГђВ°ГђВ№ГђВ»ГђВ°");
+        System.out.println("3. ГђВ’Г‘ВЂГ‘ВѓГ‘В‡ГђВЅГ‘ВѓГ‘ВЋ");
+        System.out.print("ГђВ’Г‘В‹ГђВ±ГђВµГ‘ВЂГђВёГ‘В‚ГђВµ ГђВІГђВ°Г‘ВЂГђВёГђВ°ГђВЅГ‘В‚: ");
 
         int choice = readInt();
 
         switch (choice) {
             case 1:
-                System.out.print("Введите количество машин: ");
+                System.out.print("ГђВ’ГђВІГђВµГђВґГђВёГ‘В‚ГђВµ ГђВєГђВѕГђВ»ГђВёГ‘В‡ГђВµГ‘ВЃГ‘В‚ГђВІГђВѕ ГђВјГђВ°Г‘В€ГђВёГђВЅ: ");
                 int count = readInt();
                 if (count <= 0) {
-                    System.out.println("Количество должно быть больше 0!");
+                    System.out.println("ГђВљГђВѕГђВ»ГђВёГ‘В‡ГђВµГ‘ВЃГ‘В‚ГђВІГђВѕ ГђВґГђВѕГђВ»ГђВ¶ГђВЅГђВѕ ГђВ±Г‘В‹Г‘В‚Г‘ВЊ ГђВ±ГђВѕГђВ»Г‘ВЊГ‘В€ГђВµ 0!");
                     return;
                 }
                 cars = DataProvider.generateRandom(count);
-                System.out.println("Добавлено " + cars.size() + " машин.");
+                System.out.println("ГђВ”ГђВѕГђВ±ГђВ°ГђВІГђВ»ГђВµГђВЅГђВѕ " + cars.size() + " ГђВјГђВ°Г‘В€ГђВёГђВЅ.");
                 break;
 
             case 2:
-                System.out.print("Введите имя файла: ");
+                System.out.print("ГђВ’ГђВІГђВµГђВґГђВёГ‘В‚ГђВµ ГђВёГђВјГ‘ВЏ Г‘В„ГђВ°ГђВ№ГђВ»ГђВ°: ");
                 String fileName = scanner.nextLine();
                 cars = DataProvider.readFromFile(fileName);
-                System.out.println("Загружено " + cars.size() + " машин из файла.");
+                System.out.println("ГђВ—ГђВ°ГђВіГ‘ВЂГ‘ВѓГђВ¶ГђВµГђВЅГђВѕ " + cars.size() + " ГђВјГђВ°Г‘В€ГђВёГђВЅ ГђВёГђВ· Г‘В„ГђВ°ГђВ№ГђВ»ГђВ°.");
                 break;
 
             case 3:
                 cars = DataProvider.readFromConsole(scanner);
-                System.out.println("Добавлено " + cars.size() + " машин.");
+                System.out.println("ГђВ”ГђВѕГђВ±ГђВ°ГђВІГђВ»ГђВµГђВЅГђВѕ " + cars.size() + " ГђВјГђВ°Г‘В€ГђВёГђВЅ.");
                 break;
 
             default:
-                System.out.println("Неверный выбор.");
+                System.out.println("ГђВќГђВµГђВІГђВµГ‘ВЂГђВЅГ‘В‹ГђВ№ ГђВІГ‘В‹ГђВ±ГђВѕГ‘ВЂ.");
         }
     }
 
-    private void handleSelectStrategy() {
-        System.out.println("\n--- Выбор стратегии сортировки ---");
-        System.out.println("1. Сортировка 1");
-        System.out.println("2. Сортировка 2");
-        System.out.println("3. Сортировка 3");
-        System.out.print("Выберите стратегию: ");
+    private void handleSelectSortOption() {
+        System.out.println("\n--- ГђВ’Г‘В‹ГђВ±ГђВѕГ‘ВЂ ГђВІГђВ°Г‘ВЂГђВёГђВ°ГђВЅГ‘В‚ГђВ° Г‘ВЃГђВѕГ‘ВЂГ‘В‚ГђВёГ‘ВЂГђВѕГђВІГђВєГђВё ---");
+
+        for (int i = 0; i < sortOptions.size(); i++) {
+            System.out.println((i + 1) + ". " + sortOptions.get(i).getName());
+        }
+        System.out.println("0. ГђВћГ‘В‚ГђВјГђВµГђВЅГђВ°");
+        System.out.print("ГђВ’Г‘В‹ГђВ±ГђВµГ‘ВЂГђВёГ‘В‚ГђВµ ГђВІГђВ°Г‘ВЂГђВёГђВ°ГђВЅГ‘В‚: ");
 
         int choice = readInt();
 
-        switch (choice) {
-            case 1:
-                currentStrategy = new TempStrategy();
-                System.out.println("Выбрана стратегия: сортировка 1");
-                break;
-            case 2:
-                currentStrategy = new TempStrategy();
-                System.out.println("Выбрана стратегия: сортировка 2");
-                break;
-            case 3:
-                currentStrategy = new TempStrategy();
-                System.out.println("Выбрана стратегия: сортировка 3");
-                break;
-            default:
-                System.out.println("Неверный выбор.");
+        if (choice == 0) {
+            System.out.println("ГђВћГ‘В‚ГђВјГђВµГђВЅГђВ° ГђВІГ‘В‹ГђВ±ГђВѕГ‘ВЂГђВ°.");
+            return;
         }
-    }
-
-    private void handleSelectComparator() {
-        System.out.println("\n--- Выбор поля для сортировки ---");
-        System.out.println("1. По мощности");
-        System.out.println("2. По модели (алфавит)");
-        System.out.println("3. По году выпуска");
-        System.out.print("Выберите поле: ");
-
-        int choice = readInt();
-
-        switch (choice) {
-            case 1:
-                currentComparator = new TempComparator();
-                System.out.println("Выбран компаратор: по мощности");
-                break;
-            case 2:
-                currentComparator = new TempComparator();
-                System.out.println("Выбран компаратор: по модели");
-                break;
-            case 3:
-                currentComparator = new TempComparator();
-                System.out.println("Выбран компаратор: по году выпуска");
-                break;
-            default:
-                System.out.println("Неверный выбор.");
+        if (choice < 1 || choice > sortOptions.size()) {
+            System.out.println("ГђВќГђВµГђВІГђВµГ‘ВЂГђВЅГ‘В‹ГђВ№ ГђВІГ‘В‹ГђВ±ГђВѕГ‘ВЂ.");
+            return;
         }
+
+        selectedOption = sortOptions.get(choice - 1);
+        System.out.println("ГђВ’Г‘В‹ГђВ±Г‘ВЂГђВ°ГђВЅ ГђВІГђВ°Г‘ВЂГђВёГђВ°ГђВЅГ‘В‚: " + selectedOption.getName());
     }
 
     private void handleSort() {
         if (cars == null || cars.isEmpty()) {
-            System.out.println("Сначала заполните список машин!");
+            System.out.println("ГђВЎГђВЅГђВ°Г‘В‡ГђВ°ГђВ»ГђВ° ГђВ·ГђВ°ГђВїГђВѕГђВ»ГђВЅГђВёГ‘В‚ГђВµ Г‘ВЃГђВїГђВёГ‘ВЃГђВѕГђВє!");
+            return;
+        }
+        if (selectedOption == null) {
+            System.out.println("ГђВЎГђВЅГђВ°Г‘В‡ГђВ°ГђВ»ГђВ° ГђВІГ‘В‹ГђВ±ГђВµГ‘ВЂГђВёГ‘В‚ГђВµ ГђВІГђВ°Г‘ВЂГђВёГђВ°ГђВЅГ‘В‚ Г‘ВЃГђВѕГ‘ВЂГ‘В‚ГђВёГ‘ВЂГђВѕГђВІГђВєГђВё (ГђВїГ‘ВѓГђВЅГђВєГ‘В‚ 2)!");
             return;
         }
 
-        if (currentStrategy == null) {
-            System.out.println("Сначала выберите стратегию сортировки!");
-            return;
-        }
-
-        if (currentComparator == null) {
-            System.out.println("Сначала выберите поле для сортировки!");
-            return;
-        }
-
-        System.out.println("Выполняется сортировка...");
-        currentStrategy.sort(cars, currentComparator);
-        System.out.println("Сортировка выполнена!");
+        System.out.println("ГђВ’Г‘В‹ГђВїГђВѕГђВ»ГђВЅГ‘ВЏГђВµГ‘В‚Г‘ВЃГ‘ВЏ: " + selectedOption.getName());
+        selectedOption.sort(cars);
+        System.out.println("ГђВЎГђВѕГ‘ВЂГ‘В‚ГђВёГ‘ВЂГђВѕГђВІГђВєГђВ° ГђВІГ‘В‹ГђВїГђВѕГђВ»ГђВЅГђВµГђВЅГђВ°!");
     }
 
     private void handlePrintCars() {
         if (cars == null || cars.isEmpty()) {
-            System.out.println("Список машин пуст. Заполните его!");
+            System.out.println("ГђВЎГђВїГђВёГ‘ВЃГђВѕГђВє ГђВјГђВ°Г‘В€ГђВёГђВЅ ГђВїГ‘ВѓГ‘ВЃГ‘В‚. ГђВ—ГђВ°ГђВїГђВѕГђВ»ГђВЅГђВёГ‘В‚ГђВµ ГђВµГђВіГђВѕ!");
             return;
         }
 
-        System.out.println("\n=== СПИСОК МАШИН ===");
+        System.out.println("\n=== ГђВЎГђВџГђВГђВЎГђВћГђВљ ГђВњГђВђГђВЁГђВГђВќ ===");
         for (int i = 0; i < cars.size(); i++) {
             System.out.println((i + 1) + ". " + cars.get(i));
         }
-        System.out.println("Всего: " + cars.size() + " машин.");
+        System.out.println("ГђВ’Г‘ВЃГђВµГђВіГђВѕ: " + cars.size() + " ГђВјГђВ°Г‘В€ГђВёГђВЅ.");
     }
 
     private void handleWriteToFile() {
         if (cars == null || cars.isEmpty()) {
-            System.out.println("Список пуст. Нечего записывать!");
+            System.out.println("ГђВЎГђВїГђВёГ‘ВЃГђВѕГђВє ГђВїГ‘ВѓГ‘ВЃГ‘В‚. ГђВќГђВµГ‘В‡ГђВµГђВіГђВѕ ГђВ·ГђВ°ГђВїГђВёГ‘ВЃГ‘В‹ГђВІГђВ°Г‘В‚Г‘ВЊ!");
             return;
         }
 
-        System.out.print("Введите имя файла для записи: ");
+        System.out.print("ГђВ’ГђВІГђВµГђВґГђВёГ‘В‚ГђВµ ГђВёГђВјГ‘ВЏ Г‘В„ГђВ°ГђВ№ГђВ»ГђВ° ГђВґГђВ»Г‘ВЏ ГђВ·ГђВ°ГђВїГђВёГ‘ВЃГђВё: ");
         String fileName = scanner.nextLine();
 
         if (fileName == null || fileName.isBlank()) {
             fileName = "sorted_cars.json";
         }
 
-        FileWriterUtil.appendCollectionToJson(fileName, cars, "Сохраненная коллекция");
+        FileWriterUtil.appendCollectionToJson(fileName, cars, "                     ");
 
-        System.out.println("Запись в файл: " + fileName);
-        System.out.println("Записано " + cars.size() + " машин в файл.");
+        System.out.println("ГђВ—ГђВ°ГђВїГђВёГ‘ВЃГ‘ВЊ ГђВІ Г‘В„ГђВ°ГђВ№ГђВ» : " + fileName);
+        System.out.println("ГђВ—ГђВ°ГђВїГђВёГ‘ВЃГђВ°ГђВЅГђВѕ " + cars.size() + " ГђВјГђВ°Г‘В€ГђВёГђВЅ ГђВІ Г‘В„ГђВ°ГђВ№ГђВ».");
     }
 
     private void handleCountOccurrences() {
         if (cars == null || cars.isEmpty()) {
-            System.out.println("Список пуст. Нечего подсчитывать!");
+            System.out.println("ГђВЎГђВїГђВёГ‘ВЃГђВѕГђВє ГђВїГ‘ВѓГ‘ВЃГ‘В‚. ГђВќГђВµГ‘В‡ГђВµГђВіГђВѕ ГђВїГђВѕГђВґГ‘ВЃГ‘В‡ГђВёГ‘В‚Г‘В‹ГђВІГђВ°Г‘В‚Г‘ВЊ!");
             return;
         }
 
-        int targetPower = DataProvider.getPositiveInt(scanner, "Введите мощность для подсчета: ");
+        System.out.println("\n--- ГђВџГђВћГђВ”ГђВЎГђВ§ГђВЃГђВў ГђВ’ГђВҐГђВћГђВ–ГђВ”ГђВ•ГђВќГђВГђВ™ ---");
+        int targetPower = DataProvider.getPositiveInt(scanner, "ГђВ’ГђВІГђВµГђВґГђВёГ‘В‚ГђВµ ГђВјГђВѕГ‘В‰ГђВЅГђВѕГ‘ВЃГ‘В‚Г‘ВЊ ГђВґГђВ»Г‘ВЏ ГђВїГђВѕГђВґГ‘ВЃГ‘В‡ГђВµГ‘В‚ГђВ°: ");
 
         int count = 0;
         for (Car car : cars) {
@@ -252,6 +246,10 @@ public class Main {
             }
         }
 
-        System.out.println("Количество машин с мощностью " + targetPower + ": " + count);
+        if (count == 0) {
+            System.out.println("ГђВњГђВ°Г‘В€ГђВёГђВЅ Г‘ВЃ ГђВјГђВѕГ‘В‰ГђВЅГђВѕГ‘ВЃГ‘В‚Г‘ВЊГ‘ВЋ " + targetPower + " ГђВЅГђВµ ГђВЅГђВ°ГђВ№ГђВґГђВµГђВЅГђВѕ.");
+        } else {
+            System.out.println("ГђВљГђВѕГђВ»ГђВёГ‘В‡ГђВµГ‘ВЃГ‘В‚ГђВІГђВѕ ГђВјГђВ°Г‘В€ГђВёГђВЅ Г‘ВЃ ГђВјГђВѕГ‘В‰ГђВЅГђВѕГ‘ВЃГ‘В‚Г‘ВЊГ‘ВЋ " + targetPower + ": " + count);
+        }
     }
 }
