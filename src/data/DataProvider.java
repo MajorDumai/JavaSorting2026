@@ -8,21 +8,21 @@ import java.util.Scanner;
 public class DataProvider {
 
         public static List<Car> generateRandom(int count) {
-            System.out.println("ВРЕМЕННАЯ ЗАГЛУШКА: generateRandom()");
+            System.out.println("Р’Р Р•РњР•РќРќРђРЇ Р—РђР“Р›РЈРЁРљРђ: generateRandom()");
             List<Car> cars = new ArrayList<>();
             String[] models = {"Tesla", "BMW", "Audi", "Mercedes", "Toyota"};
 
             for (int i = 0; i < count; i++) {
-                int power = 100 + (int)(Math.random() * 200);  // от 100 до 300
+                int power = 100 + (int)(Math.random() * 200);  // РѕС‚ 100 РґРѕ 300
                 String model = models[(int)(Math.random() * models.length)];
-                int year = 2000 + (int)(Math.random() * 25);    // от 2000 до 2025
+                int year = 2000 + (int)(Math.random() * 25);    // РѕС‚ 2000 РґРѕ 2025
                 cars.add(new Car(power, model, year));
             }
             return cars;
         }
 
         public static List<Car> readFromFile(String fileName) {
-            System.out.println("ВРЕМЕННАЯ ЗАГЛУШКА: readFromFile() -> " + fileName);
+            System.out.println("Р’Р Р•РњР•РќРќРђРЇ Р—РђР“Р›РЈРЁРљРђ: readFromFile() -> " + fileName);
             List<Car> cars = new ArrayList<>();
             cars.add(new Car(150, "Tesla", 2022));
             cars.add(new Car(200, "BMW", 2020));
@@ -32,26 +32,26 @@ public class DataProvider {
         public static List<Car> readFromConsole(Scanner scanner) {
             List<Car> cars = new ArrayList<>();
 
-            System.out.println("\n*** Ручной ввод машин ***");
+            System.out.println("\n*** Р СѓС‡РЅРѕР№ РІРІРѕРґ РјР°С€РёРЅ ***");
 
-            int count = getPositiveInt(scanner, "Сколько машин хотите ввести? ");
+            int count = getPositiveInt(scanner, "РЎРєРѕР»СЊРєРѕ РјР°С€РёРЅ С…РѕС‚РёС‚Рµ РІРІРµСЃС‚Рё? ");
 
             for (int i =0; i< count; i++) {
-                System.out.println("\n--- Машина " + (i+1) + " из " +count + " ---");
+                System.out.println("\n--- РњР°С€РёРЅР° " + (i+1) + " РёР· " +count + " ---");
 
-                int power = getPositiveInt(scanner, "Введите мощность (лошадиные силы): ");
+                int power = getPositiveInt(scanner, "Р’РІРµРґРёС‚Рµ РјРѕС‰РЅРѕСЃС‚СЊ (Р»РѕС€Р°РґРёРЅС‹Рµ СЃРёР»С‹): ");
 
-                String model = getNonEmplyString(scanner, "Введите модель: ");
+                String model = getNonEmplyString(scanner, "Р’РІРµРґРёС‚Рµ РјРѕРґРµР»СЊ: ");
 
-                int year = getValidYYear(scanner, "Введите год выпуска (1900 - 2026): ");
+                int year = getValidYYear(scanner, "Р’РІРµРґРёС‚Рµ РіРѕРґ РІС‹РїСѓСЃРєР° (1900 - 2026): ");
 
                 Car car = new Car(power, model, year);
                 cars.add(car);
 
-                System.out.println("Машина добавлена: " + car);
+                System.out.println("РњР°С€РёРЅР° РґРѕР±Р°РІР»РµРЅР°: " + car);
             }
 
-            System.out.println("\nВсего добавлено машин: " + cars.size());
+            System.out.println("\nР’СЃРµРіРѕ РґРѕР±Р°РІР»РµРЅРѕ РјР°С€РёРЅ: " + cars.size());
             return cars;
         }
 
@@ -64,12 +64,12 @@ public class DataProvider {
                     if (value > 0 && value <=1000) {
                         return value;
                     } else if (value <=0 ) {
-                        System.out.println("Ошибка! Мощность должна быть больше 0!");
+                        System.out.println("РћС€РёР±РєР°! РњРѕС‰РЅРѕСЃС‚СЊ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ 0!");
                     } else {
-                        System.out.println("Ошибка! Мощность не может быть больше 1000!");
+                        System.out.println("РћС€РёР±РєР°! РњРѕС‰РЅРѕСЃС‚СЊ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ 1000!");
                     }
                 } catch (java.util.InputMismatchException e) {
-                    System.out.println("Ошибка! Введите целое число от 1 до 1000!");
+                    System.out.println("РћС€РёР±РєР°! Р’РІРµРґРёС‚Рµ С†РµР»РѕРµ С‡РёСЃР»Рѕ РѕС‚ 1 РґРѕ 1000!");
                     scanner.nextLine();
                 }
             }
@@ -82,7 +82,7 @@ public class DataProvider {
                 if (!value.isEmpty()) {
                     return value;
                 } else {
-                    System.out.println("Ошибка! Модель не может быть пустой!");
+                    System.out.println("РћС€РёР±РєР°! РњРѕРґРµР»СЊ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚РѕР№!");
                 }
             }
         }
@@ -97,10 +97,10 @@ public class DataProvider {
                     if (year >= 1900 && year <= currentYear) {
                         return year;
                     } else {
-                        System.out.println("Ошибка! Год должен быть от 1900 до " + currentYear + "!");
+                        System.out.println("РћС€РёР±РєР°! Р“РѕРґ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РѕС‚ 1900 РґРѕ " + currentYear + "!");
                     }
                 } catch (java.util.InputMismatchException e) {
-                    System.out.println("Ошибка! Введите целое число!");
+                    System.out.println("РћС€РёР±РєР°! Р’РІРµРґРёС‚Рµ С†РµР»РѕРµ С‡РёСЃР»Рѕ!");
                     scanner.nextLine();
                 }
             }

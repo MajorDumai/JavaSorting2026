@@ -8,10 +8,10 @@ public class TempStrategy implements SortingStrategy{
 
         @Override
         public void sort(List<Car> cars, Comparator<Car> comparator) {
-            System.out.println("ВРЕМЕННАЯ ЗАГЛУШКА: сортировка НЕ выполняется");
-            System.out.println("   (Реальная сортировка появится позже)");
+            System.out.println("Р’Р Р•РњР•РќРќРђРЇ Р—РђР“Р›РЈРЁРљРђ: СЃРѕСЂС‚РёСЂРѕРІРєР° РќР• РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ");
+            System.out.println("   (Р РµР°Р»СЊРЅР°СЏ СЃРѕСЂС‚РёСЂРѕРІРєР° РїРѕСЏРІРёС‚СЃСЏ РїРѕР·Р¶Рµ)");
 
-            System.out.println("   Текущий список (без сортировки):");
+            System.out.println("   РўРµРєСѓС‰РёР№ СЃРїРёСЃРѕРє (Р±РµР· СЃРѕСЂС‚РёСЂРѕРІРєРё):");
             for (Car car : cars) {
                 System.out.println("   - " + car);
             }
