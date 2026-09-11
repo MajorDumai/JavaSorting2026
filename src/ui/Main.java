@@ -9,6 +9,7 @@ import strategy.TempStrategy;
 import java.util.*;
 import java.util.List;
 
+import com.company.util.FileWriterUtil;
 public class Main {
 
     private List<Car> cars;
@@ -226,8 +227,14 @@ public class Main {
         System.out.print("Введите имя файла для записи: ");
         String fileName = scanner.nextLine();
 
-        System.out.println("Запись в файл (заглушка): " + fileName);
-        System.out.println("(Временная заглушка) Записано " + cars.size() + " машин в файл.");
+        if (fileName == null || fileName.isBlank()) {
+            fileName = "sorted_cars.json";
+        }
+
+        FileWriterUtil.appendCollectionToJson(fileName, cars, "Сохраненная коллекция");
+
+        System.out.println("Запись в файл: " + fileName);
+        System.out.println("Записано " + cars.size() + " машин в файл.");
     }
 
     private void handleCountOccurrences() {
