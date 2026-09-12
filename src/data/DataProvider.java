@@ -72,7 +72,7 @@ public class DataProvider {
     public static List<Car> readFromConsole(Scanner scanner) {
         List<Car> cars = new ArrayList<>();
 
-        System.out.println("\n*** Ручной ввод машин ***");
+        System.out.println("\nРучной ввод машин");
 
         int count = getPositiveInt(scanner, "Сколько машин хотите ввести? ");
 
