@@ -1,7 +1,7 @@
 package com.company.test;
 
-import com.company.Car;
-import com.company.SortingManager;
+import model.Car;
+import strategy.SortingManager;
 import com.company.util.FileWriterUtil;
 
 import java.io.IOException;
@@ -15,21 +15,21 @@ public class FileWriterTest {
         System.out.println("Тестирование записи в JSON\n");
 
         Car car1 = Car.builder()
-                .power(150)
-                .model("Toyota Camry")
-                .year(2020)
+                .setPower(150)
+                .setModel("Toyota Camry")
+                .setYear(2020)
                 .build();
 
         Car car2 = Car.builder()
-                .power(200)
-                .model("BMW X5")
-                .year(2021)
+                .setPower(200)
+                .setModel("BMW X5")
+                .setYear(2021)
                 .build();
 
         Car car3 = Car.builder()
-                .power(120)
-                .model("Lada Vesta")
-                .year(2022)
+                .setPower(120)
+                .setModel("Lada Vesta")
+                .setYear(2022)
                 .build();
 
         List<Car> cars = new ArrayList<>();

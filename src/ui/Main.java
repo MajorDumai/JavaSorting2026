@@ -1,11 +1,12 @@
 package ui;
 
-import util.ScannerUtil;
+import count.AsyncCount;
 import data.ProviderStream;
+import util.ScannerUtil;
 import model.Car;
 import strategy.SortOption;
-import list.MyArray;
-import util.FileWriterUtil;
+import strategy.SortingManager;
+import com.company.util.FileWriterUtil;
 
 import java.util.*;
 
@@ -21,15 +22,15 @@ public class Main {
             0. Выход
             Ваш выбор: """;
 
-    final private List<Car> cars;
-    final private List<SortOption> sortOptions;
+    private List<Car> cars;
+    private List<SortOption> sortOptions;
     private SortOption selectedOption;
-    final private Scanner scanner;
+    private Scanner scanner;
 
     public Main() {
-        this.cars = new MyArray<>();
-        this.scanner = new Scanner(System.in).useDelimiter("\n");
-        this.sortOptions = new MyArray<>();
+        this.cars = new ArrayList<>();
+        this.scanner = new Scanner(System.in);
+        this.sortOptions = new ArrayList<>();
         initSortOptions();
     }
 
@@ -107,9 +108,9 @@ public class Main {
     }
 
     private void handleFillData() {
+        System.out.print("Сохранить предыдущие записи? (Y/N, ДА/НЕТ) ");
         while (true) {
-            System.out.print("Сохранить предыдущие записи? (Y/N, ДА/НЕТ) ");
-            final String reply = ScannerUtil.readString(scanner, "Введите ответ");
+            final String reply = ScannerUtil.readString(scanner, "Ответ пуст");
             switch (reply.toUpperCase()) {
                 case "Y":
                 case "ДА":
@@ -120,7 +121,7 @@ public class Main {
                     ProviderStream.overwriteList(cars, scanner);
                     return;
                 default:
-                    System.out.println("Неподходящий ответ!");
+                    System.out.println("Неверный ответ!");
             }
         }
     }
@@ -129,7 +130,7 @@ public class Main {
         System.out.println("\n--- Выбор варианта сортировки ---");
 
         for (int i = 0; i < sortOptions.size(); i++) {
-            System.out.printf("%d. %s\n", i + 1, sortOptions.get(i).getName());
+            System.out.printf("%d. %s%n", i + 1, sortOptions.get(i).getName());
         }
         System.out.println("0. Отмена");
         System.out.print("Выберите вариант: ");
@@ -170,7 +171,7 @@ public class Main {
 
         System.out.println("\nСПИСОК МАШИН");
         for (int i = 0; i < cars.size(); i++) {
-            System.out.printf("%d. %s\n", i + 1, cars.get(i));
+            System.out.println((i + 1) + ". " + cars.get(i));
         }
         System.out.println("Всего: " + cars.size() + " машин.");
     }
@@ -181,7 +182,7 @@ public class Main {
         }
 
         System.out.print("Введите имя файла для записи: ");
-        String fileName = ScannerUtil.readString(scanner, "Имя файла пустое");
+        String fileName = ScannerUtil.readString(scanner, "Имя файла пусто");
 
         if (fileName.isBlank()) {
             fileName = "sorted_cars.json";
@@ -197,29 +198,24 @@ public class Main {
         if (isListEmpty("Нечего подсчитывать!")) {
             return;
         }
-        final int targetPower;
 
         System.out.println("\n--- ПОДСЧЁТ ВХОЖДЕНИЙ ---");
-        System.out.print("Введите мощность для подсчета: ");
-        targetPower = ScannerUtil.readInt(scanner);
+        System.out.println("Введите параметры автомобиля для поиска: ");
+        Car targetCar = ScannerUtil.getCar(scanner);
 
         int count = 0;
-        for (Car car : cars) {
-            if (car.getPower() == targetPower) {
-                count++;
-            }
-        }
+        count= AsyncCount.count(cars, targetCar);
 
         if (count == 0) {
-            System.out.println("Машин с мощностью " + targetPower + " не найдено.");
+            System.out.println("Машин, совпадающих с " + targetCar + " не найдено.");
         } else {
-            System.out.println("Количество машин с мощностью " + targetPower + ": " + count);
+            System.out.println("Количество машин с мощностью " + targetCar + ": " + count);
         }
     }
 
     private boolean isListEmpty(String emptyMessageEnd) {
         if (cars == null || cars.isEmpty()) {
-            System.out.printf("Список машин пуст! %s\n", emptyMessageEnd);
+            System.out.printf("Список машин пуст. %s%n", emptyMessageEnd);
             return true;
         }
         return false;
