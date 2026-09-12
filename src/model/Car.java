@@ -1,28 +1,47 @@
 package model;
 
+import java.util.Objects;
+
 public class Car {
 
-        private int power;
-        private String model;
-        private int year;
+    private int power;
+    private String model;
+    private int year;
 
-        public Car(int power, String model, int year) {
-            this.power = power;
-            this.model = model;
-            this.year = year;
+    public Car(int power, String model, int year) {
+        this.power = power;
+        this.model = model;
+        this.year = year;
+    }
+
+    public int getPower() {
+        return power;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "power=" + power +
+                ", model='" + model + '\'' +
+                ", year=" + year +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Car car)) {
+            return false;
         }
-
-        public int getPower() { return power; }
-        public String getModel() { return model; }
-        public int getYear() { return year; }
-
-        @Override
-        public String toString() {
-            return "Car{" +
-                    "power=" + power +
-                    ", model='" + model + '\'' +
-                    ", year=" + year +
-                    '}';
-        }
-
+        return power == car.power
+                && year == car.year
+                && Objects.equals(model, car.model);
+    }
 }

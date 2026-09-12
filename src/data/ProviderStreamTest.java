@@ -49,7 +49,12 @@ public class ProviderStreamTest {
         test(carList.size(), testList.size());
         test(carList, testList);
         ProviderStream.overwriteList(carList, scanner);
+        testList.clear();
+        for (int i = 0; i < CAR_COUNT; i++) {
+            testList.add(new Car(POWER, MODEL, YEAR));
+        }
         test(carList.size(), CAR_COUNT);
+        test(carList, testList);
         ProviderStream.addToList(carList, scanner);
         test(carList.size(), CAR_COUNT * 2);
         System.out.println("All tests complete.");

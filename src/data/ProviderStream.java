@@ -67,7 +67,7 @@ public class ProviderStream {
     public static void overwriteList(List<Car> carList, Scanner scanner) {
         getDataList(scanner).findAny()
                 .ifPresent(newCarList -> {
-                    carList.removeAll(carList);
+                    carList.clear();
                     carList.addAll(newCarList);
                 });
     }
