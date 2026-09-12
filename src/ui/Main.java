@@ -6,7 +6,7 @@ import util.ScannerUtil;
 import model.Car;
 import strategy.SortOption;
 import strategy.SortingManager;
-import com.company.util.FileWriterUtil;
+import util.FileWriterUtil;
 
 import java.util.*;
 

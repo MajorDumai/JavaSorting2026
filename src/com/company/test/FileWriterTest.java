@@ -2,7 +2,7 @@ package com.company.test;
 
 import model.Car;
 import strategy.SortingManager;
-import com.company.util.FileWriterUtil;
+import util.FileWriterUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
