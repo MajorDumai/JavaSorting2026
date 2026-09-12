@@ -1,8 +1,11 @@
 package ui;
 
+import com.company.util.ScannerUtil;
 import data.DataProvider;
+import data.ProviderStream;
 import model.Car;
 import strategy.SortOption;
+import com.company.MyArray;
 import com.company.util.FileWriterUtil;
 
 import java.util.*;
@@ -19,15 +22,15 @@ public class Main {
             0. Выход
             Ваш выбор: """;
 
-    private List<Car> cars;
-    private List<SortOption> sortOptions;
+    final private List<Car> cars;
+    final private List<SortOption> sortOptions;
     private SortOption selectedOption;
-    private Scanner scanner;
+    final private Scanner scanner;
 
     public Main() {
-        this.cars = new ArrayList<>();
-        this.scanner = new Scanner(System.in);
-        this.sortOptions = new ArrayList<>();
+        this.cars = new MyArray<>();
+        this.scanner = new Scanner(System.in).useDelimiter("\n");
+        this.sortOptions = new MyArray<>();
         initSortOptions();
     }
 
@@ -74,7 +77,7 @@ public class Main {
 
         while (true) {
             System.out.print(MENU_STR);
-            int choice = readInt();
+            int choice = ScannerUtil.readInt(scanner);
 
             switch (choice) {
                 case 1:
@@ -104,55 +107,22 @@ public class Main {
         }
     }
 
-    private int readInt() {
-        while (true) {
-            try {
-                int value = scanner.nextInt();
-                scanner.nextLine();
-                return value;
-            } catch (InputMismatchException e) {
-                System.out.println("Ошибка: введите число!");
-                scanner.nextLine();
-                System.out.print("Попробуйте снова: ");
-            }
-        }
-    }
-
     private void handleFillData() {
-        System.out.println("\n--- Заполнение массива данными ---");
-        System.out.println("1. Рандом");
-        System.out.println("2. Из файла");
-        System.out.println("3. Вручную");
-        System.out.print("Выберите вариант: ");
-
-        int choice = readInt();
-
-        switch (choice) {
-            case 1:
-                System.out.print("Введите количество машин: ");
-                int count = readInt();
-                if (count <= 0) {
-                    System.out.println("Количество должно быть больше 0!");
+        while (true) {
+            System.out.print("Сохранить предыдущие записи? (Y/N, ДА/НЕТ) ");
+            final String reply = ScannerUtil.readString(scanner, "Введите ответ");
+            switch (reply.toUpperCase()) {
+                case "Y":
+                case "ДА":
+                    ProviderStream.addToList(cars, scanner);
                     return;
-                }
-                cars = DataProvider.generateRandom(count);
-                System.out.println("Добавлено " + cars.size() + " машин.");
-                break;
-
-            case 2:
-                System.out.print("Введите имя файла: ");
-                String fileName = scanner.nextLine();
-                cars = DataProvider.readFromFile(fileName, scanner);
-                System.out.println("Загружено " + cars.size() + " машин из файла.");
-                break;
-
-            case 3:
-                cars = DataProvider.readFromConsole(scanner);
-                System.out.println("Добавлено " + cars.size() + " машин.");
-                break;
-
-            default:
-                System.out.println("Неверный выбор.");
+                case "N":
+                case "НЕТ":
+                    ProviderStream.overwriteList(cars, scanner);
+                    return;
+                default:
+                    System.out.println("Неподходящий ответ!");
+            }
         }
     }
 
@@ -160,12 +130,12 @@ public class Main {
         System.out.println("\n--- Выбор варианта сортировки ---");
 
         for (int i = 0; i < sortOptions.size(); i++) {
-            System.out.printf("%d. %s%n", i + 1, sortOptions.get(i).getName());
+            System.out.printf("%d. %s\n", i + 1, sortOptions.get(i).getName());
         }
         System.out.println("0. Отмена");
         System.out.print("Выберите вариант: ");
 
-        int choice = readInt();
+        int choice = ScannerUtil.readInt(scanner);
 
         if (choice == 0) {
             System.out.println("Отмена выбора.");
@@ -201,7 +171,7 @@ public class Main {
 
         System.out.println("\n=== СПИСОК МАШИН ===");
         for (int i = 0; i < cars.size(); i++) {
-            System.out.println((i + 1) + ". " + cars.get(i));
+            System.out.printf("%d. %s\n", i + 1, cars.get(i));
         }
         System.out.println("Всего: " + cars.size() + " машин.");
     }
@@ -212,9 +182,9 @@ public class Main {
         }
 
         System.out.print("Введите имя файла для записи: ");
-        String fileName = scanner.nextLine();
+        String fileName = ScannerUtil.readString(scanner, "Имя файла пустое");
 
-        if (fileName == null || fileName.isBlank()) {
+        if (fileName.isBlank()) {
             fileName = "sorted_cars.json";
         }
 
@@ -228,9 +198,11 @@ public class Main {
         if (isListEmpty("Нечего подсчитывать!")) {
             return;
         }
+        final int targetPower;
 
         System.out.println("\n--- ПОДСЧЁТ ВХОЖДЕНИЙ ---");
-        int targetPower = DataProvider.getPositiveInt(scanner, "Введите мощность для подсчета: ");
+        System.out.print("Введите мощность для подсчета: ");
+        targetPower = ScannerUtil.readInt(scanner);
 
         int count = 0;
         for (Car car : cars) {
@@ -248,7 +220,7 @@ public class Main {
 
     private boolean isListEmpty(String emptyMessageEnd) {
         if (cars == null || cars.isEmpty()) {
-            System.out.printf("Список машин пуст. %s%n", emptyMessageEnd);
+            System.out.printf("Список машин пуст! %s\n", emptyMessageEnd);
             return true;
         }
         return false;

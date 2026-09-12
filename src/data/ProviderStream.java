@@ -1,8 +1,8 @@
 package data;
 
+import com.company.util.ScannerUtil;
 import model.Car;
 
-import java.util.Optional;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -24,22 +24,17 @@ public class ProviderStream {
                     final int selection;
                     final List<Car> cars;
                     System.out.print(MENU_STR);
-                    selection = scanner.nextInt();
+                    selection = ScannerUtil.readInt(scanner);
                     switch (selection) {
                         case 1:
                             System.out.print("Введите количество машин: ");
-                            final int count = scanner.nextInt();
-                            if (count <= 0) {
-                                System.out.println("Количество должно быть больше 0!");
-                                return List.of();
-                            } else {
-                                cars = DataProvider.generateRandom(count);
-                                System.out.println("Добавлено " + cars.size() + " машин.");
-                                return cars;
-                            }
+                            final int count = ScannerUtil.readInt(scanner);
+                            cars = DataProvider.generateRandom(count);
+                            System.out.println("Добавлено " + cars.size() + " машин.");
+                            return cars;
                         case 2:
                             System.out.print("Введите имя файла: ");
-                            final String fileName = scanner.next();
+                            final String fileName = ScannerUtil.readString(scanner, "Имя файла пустое");
                             cars = DataProvider.readFromFile(fileName, scanner);
                             System.out.println("Загружено " + cars.size() + " машин из файла.");
                             return cars;
@@ -56,15 +51,24 @@ public class ProviderStream {
             }
         };
 
+        if (scanner == null) {
+            throw new NullPointerException("ProviderStream.getDataList(): scanner отсутствует!");
+        }
         return Stream.of(readData)
                 .map(Supplier::get);
     }
 
     public static void addToList(List<Car> carList, Scanner scanner) {
+        if (carList == null) {
+            throw new NullPointerException("ProviderStream.addToList(): carList отсутствует!");
+        }
         getDataList(scanner).flatMap(List::stream).forEach(carList::add);
     }
 
     public static void overwriteList(List<Car> carList, Scanner scanner) {
+        if (carList == null) {
+            throw new NullPointerException("ProviderStream.overwriteList(): carList отсутствует!");
+        }
         getDataList(scanner).findAny()
                 .ifPresent(newCarList -> {
                     carList.clear();

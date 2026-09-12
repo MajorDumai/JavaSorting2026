@@ -1,8 +1,8 @@
 package data;
 
+import com.company.MyArray;
 import model.Car;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -27,6 +27,30 @@ public class ProviderStreamTest {
         }
     }
 
+    private static void test(String filename, Scanner scanner) {
+        testCount++;
+        try {
+            DataProvider.readFromFile(filename, scanner);
+        } catch (NullPointerException e) {
+            return;
+        }
+        throw new RuntimeException(String.format("Test %d failed", testCount));
+    }
+
+    private static void test(List<Car> carList, Scanner scanner) {
+        testCount++;
+        try {
+            ProviderStream.addToList(carList, scanner);
+        } catch (NullPointerException e1) {
+            try {
+                ProviderStream.overwriteList(carList, scanner);
+            } catch (NullPointerException e2) {
+                return;
+            }
+        }
+        throw new RuntimeException(String.format("Test %d failed", testCount));
+    }
+
     private static void test(List<Car> carList, List<Car> targetList) {
         testCount++;
         final int size = carList.size();
@@ -42,9 +66,9 @@ public class ProviderStreamTest {
 
     public static void main(String[] args) {
         System.out.println("Running ProviderStream tests.");
-        final List<Car> carList = new ArrayList<>();
+        final List<Car> carList = new MyArray<>();
         final List<Car> testList = DataProvider.readFromFile(FILENAME, new Scanner("1\n"));
-        final Scanner scanner = new Scanner(String.format(TEST_STR));
+        final Scanner scanner = new Scanner(String.format(TEST_STR)).useDelimiter("\n");
         ProviderStream.addToList(carList, scanner);
         test(carList.size(), testList.size());
         test(carList, testList);
@@ -57,6 +81,10 @@ public class ProviderStreamTest {
         test(carList, testList);
         ProviderStream.addToList(carList, scanner);
         test(carList.size(), CAR_COUNT * 2);
+        test(FILENAME, null);
+        test(carList, (Scanner) null);
+        test((String) null, scanner);
+        test((List<Car>) null, scanner);
         System.out.println("All tests complete.");
     }
 }
