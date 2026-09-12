@@ -7,8 +7,17 @@ import com.company.util.FileWriterUtil;
 
 import java.util.*;
 
-import com.company.util.FileWriterUtil;
 public class Main {
+    private static final String MENU_STR = """
+            \n=== ГЛАВНОЕ МЕНЮ ===
+            1. Заполнить массив данными
+            2. Выбрать вариант сортировки
+            3. Выполнить сортировку
+            4. Показать текущий список
+            5. Записать в файл (доп. задание)
+            6. Подсчитать вхождения (доп. задание)
+            0. Выход
+            Ваш выбор: """;
 
     private List<Car> cars;
     private List<SortOption> sortOptions;
@@ -64,7 +73,7 @@ public class Main {
         System.out.println("*** Добро пожаловать в программу сортировки автомобилей ***");
 
         while (true) {
-            printMainMenu();
+            System.out.print(MENU_STR);
             int choice = readInt();
 
             switch (choice) {
@@ -93,18 +102,6 @@ public class Main {
                     System.out.println("Неверный выбор. Попробуйте снова.");
             }
         }
-    }
-
-    private void printMainMenu() {
-        System.out.println("\n=== ГЛАВНОЕ МЕНЮ ===");
-        System.out.println("1. Заполнить массив данными");
-        System.out.println("2. Выбрать вариант сортировки");
-        System.out.println("3. Выполнить сортировку");
-        System.out.println("4. Показать текущий список");
-        System.out.println("5. Записать в файл (доп. задание)");
-        System.out.println("6. Подсчитать вхождения (доп. задание)");
-        System.out.println("0. Выход");
-        System.out.print("Ваш выбор: ");
     }
 
     private int readInt() {
@@ -145,7 +142,7 @@ public class Main {
             case 2:
                 System.out.print("Введите имя файла: ");
                 String fileName = scanner.nextLine();
-                cars = DataProvider.readFromFile(fileName);
+                cars = DataProvider.readFromFile(fileName, scanner);
                 System.out.println("Загружено " + cars.size() + " машин из файла.");
                 break;
 
@@ -163,7 +160,7 @@ public class Main {
         System.out.println("\n--- Выбор варианта сортировки ---");
 
         for (int i = 0; i < sortOptions.size(); i++) {
-            System.out.println((i + 1) + ". " + sortOptions.get(i).getName());
+            System.out.printf("%d. %s%n", i + 1, sortOptions.get(i).getName());
         }
         System.out.println("0. Отмена");
         System.out.print("Выберите вариант: ");
@@ -184,8 +181,7 @@ public class Main {
     }
 
     private void handleSort() {
-        if (cars == null || cars.isEmpty()) {
-            System.out.println("Сначала заполните список!");
+        if (isListEmpty("Заполните его!")) {
             return;
         }
         if (selectedOption == null) {
@@ -199,8 +195,7 @@ public class Main {
     }
 
     private void handlePrintCars() {
-        if (cars == null || cars.isEmpty()) {
-            System.out.println("Список машин пуст. Заполните его!");
+        if (isListEmpty("Заполните его!")) {
             return;
         }
 
@@ -212,8 +207,7 @@ public class Main {
     }
 
     private void handleWriteToFile() {
-        if (cars == null || cars.isEmpty()) {
-            System.out.println("Список пуст. Нечего записывать!");
+        if (isListEmpty("Нечего записывать!")) {
             return;
         }
 
@@ -231,8 +225,7 @@ public class Main {
     }
 
     private void handleCountOccurrences() {
-        if (cars == null || cars.isEmpty()) {
-            System.out.println("Список пуст. Нечего подсчитывать!");
+        if (isListEmpty("Нечего подсчитывать!")) {
             return;
         }
 
@@ -251,5 +244,13 @@ public class Main {
         } else {
             System.out.println("Количество машин с мощностью " + targetPower + ": " + count);
         }
+    }
+
+    private boolean isListEmpty(String emptyMessageEnd) {
+        if (cars == null || cars.isEmpty()) {
+            System.out.printf("Список машин пуст. %s%n", emptyMessageEnd);
+            return true;
+        }
+        return false;
     }
 }

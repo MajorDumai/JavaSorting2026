@@ -1,11 +1,11 @@
-package com.company.count;
+package com.company;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.company.Car;
-import com.company.MyArray;
+//import com.company.MyArray;
 
-public class Test {
+public class AsyncCountTest {
     private static int testCount = 0;
     private static final int[] CAR_IDS = {0, 1, 2, 3,
             0, 0, 2, 1, 2, 3,
@@ -27,7 +27,7 @@ public class Test {
     private static void test(boolean condition) {
         testCount++;
         if (!condition) {
-            throw new RuntimeException(String.format("Test %d failed.", testCount));  
+            throw new RuntimeException(String.format("Test %d failed.", testCount));
         }
     }
 
@@ -43,11 +43,11 @@ public class Test {
             throw new RuntimeException(String.format("Test %d failed.", testCount));
         }
     }
-    
+
     public static void main(String[] args) {
         System.out.println("Running AsyncCount tests.");
         final int[] carCounts = {0, 0, 0, 0};
-        final List<Car> carList = new MyArray<>();
+        final List<Car> carList = new ArrayList<>();
         for (int id : CAR_IDS) {
             carCounts[id]++;
             carList.add(CARS[id]);
@@ -57,7 +57,7 @@ public class Test {
         }
         test(AsyncCount.count(carList, CARS[4]) == carCounts[0]);
         test(AsyncCount.count(carList, CARS[5]) == 0);
-        test(AsyncCount.count(new MyArray<>(), CARS[4]) == 0);
+        test(AsyncCount.count(new ArrayList<>(), CARS[4]) == 0);
         testNullPointer(null, CARS[4]);
         testNullPointer(carList, null);
         System.out.println("All tests complete.");
