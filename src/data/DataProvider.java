@@ -59,6 +59,16 @@ public class DataProvider {
         }
     }
 
+    public static Car readCarFromConsole(Scanner scanner){
+        int power = getPositiveInt(scanner, "Введите мощность (лошадиные силы): ");
+
+        String model = getNonEmplyString(scanner, "Введите модель: ");
+
+        int year = getValidYYear(scanner, "Введите год выпуска (1900 - 2026): ");
+
+        return Car.builder().setPower(power).setModel(model).setYear(year).build();
+    }
+
     public static List<Car> readFromConsole(Scanner scanner) {
         List<Car> cars = new ArrayList<>();
 
@@ -69,13 +79,7 @@ public class DataProvider {
         for (int i = 0; i < count; i++) {
             System.out.println("\n--- Машина " + (i + 1) + " из " + count + " ---");
 
-            int power = getPositiveInt(scanner, "Введите мощность (лошадиные силы): ");
-
-            String model = getNonEmplyString(scanner, "Введите модель: ");
-
-            int year = getValidYYear(scanner, "Введите год выпуска (1900 - 2026): ");
-
-            Car car = new Car(power, model, year);
+            Car car = readCarFromConsole(scanner);
             cars.add(car);
 
             System.out.println("Машина добавлена: " + car);

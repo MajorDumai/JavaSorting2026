@@ -1,5 +1,6 @@
 package ui;
 
+import com.company.AsyncCount;
 import data.DataProvider;
 import model.Car;
 import strategy.SortOption;
@@ -231,19 +232,16 @@ public class Main {
         }
 
         System.out.println("\n--- ПОДСЧЁТ ВХОЖДЕНИЙ ---");
-        int targetPower = DataProvider.getPositiveInt(scanner, "Введите мощность для подсчета: ");
+        System.out.println("Введите параметры автомобиля для поиска: ");
+        Car targetCar = DataProvider.readCarFromConsole(scanner);
 
         int count = 0;
-        for (Car car : cars) {
-            if (car.getPower() == targetPower) {
-                count++;
-            }
-        }
+        count= AsyncCount.count(cars, targetCar);
 
         if (count == 0) {
-            System.out.println("Машин с мощностью " + targetPower + " не найдено.");
+            System.out.println("Машин, совпадающих с " + targetCar + " не найдено.");
         } else {
-            System.out.println("Количество машин с мощностью " + targetPower + ": " + count);
+            System.out.println("Количество машин с мощностью " + targetCar + ": " + count);
         }
     }
 
