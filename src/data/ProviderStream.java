@@ -1,6 +1,6 @@
 package data;
 
-import com.company.util.ScannerUtil;
+import util.ScannerUtil;
 import model.Car;
 
 import java.util.InputMismatchException;

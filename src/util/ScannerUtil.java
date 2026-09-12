@@ -1,4 +1,4 @@
-package com.company.util;
+package util;
 
 import model.Car;
 

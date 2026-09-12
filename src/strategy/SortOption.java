@@ -1,8 +1,7 @@
 package strategy;
 
 import model.Car;
-import com.company.Ignorer;
-import com.company.SortingManager;
+
 import java.util.Comparator;
 import java.util.List;
 

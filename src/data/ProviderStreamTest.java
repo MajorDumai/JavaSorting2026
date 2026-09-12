@@ -1,6 +1,6 @@
 package data;
 
-import com.company.MyArray;
+import list.MyArray;
 import model.Car;
 
 import java.util.List;

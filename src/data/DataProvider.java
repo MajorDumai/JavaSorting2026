@@ -1,9 +1,9 @@
 package data;
 
 import model.Car;
-import com.company.MyArray;
-import com.company.util.FileWriterUtil;
-import com.company.util.ScannerUtil;
+import list.MyArray;
+import util.FileWriterUtil;
+import util.ScannerUtil;
 
 import java.io.IOException;
 import java.util.List;
@@ -44,21 +44,19 @@ public class DataProvider {
             for (int i = 0, len = entries.size(); i < len; i++) {
                 printListEntry(i + 1, entries.get(i));
             }
-            while (true) {
-                final int selection;
-                final List<Car> cars = new MyArray<>();
-                final List<Map<String, Object>> data;
-                System.out.print("Выберите список из файла: ");
-                selection = ScannerUtil.readInt(scanner, 1, entries.size() - 1, "Выбранного списка нет");
-                data = (List<Map<String, Object>>) entries.get(selection).get(DATA);
-                for (Map<String, Object> jsonCar : data) {
-                    final int power = (int) jsonCar.get(POWER);
-                    final String model = (String) jsonCar.get(MODEL);
-                    final int year = (int) jsonCar.get(YEAR);
-                    cars.add(new Car(power, model, year));
-                }
-                return cars;
+            final int selection;
+            final List<Car> cars = new MyArray<>();
+            final List<Map<String, Object>> data;
+            System.out.print("Выберите список из файла: ");
+            selection = ScannerUtil.readInt(scanner, 1, entries.size() - 1, "Выбранного списка нет");
+            data = (List<Map<String, Object>>) entries.get(selection).get(DATA);
+            for (Map<String, Object> jsonCar : data) {
+                final int power = (int) jsonCar.get(POWER);
+                final String model = (String) jsonCar.get(MODEL);
+                final int year = (int) jsonCar.get(YEAR);
+                cars.add(new Car(power, model, year));
             }
+            return cars;
         } catch (IOException e) {
             System.out.println("Ошибка! Невозможно прочитать данный файл!");
             return List.of();

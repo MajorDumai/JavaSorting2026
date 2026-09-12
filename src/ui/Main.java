@@ -1,12 +1,11 @@
 package ui;
 
-import com.company.util.ScannerUtil;
-import data.DataProvider;
+import util.ScannerUtil;
 import data.ProviderStream;
 import model.Car;
 import strategy.SortOption;
-import com.company.MyArray;
-import com.company.util.FileWriterUtil;
+import list.MyArray;
+import util.FileWriterUtil;
 
 import java.util.*;
 

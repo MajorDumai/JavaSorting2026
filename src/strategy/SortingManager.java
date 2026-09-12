@@ -1,4 +1,4 @@
-package com.company;
+package strategy;
 
 import java.util.List;
 import java.util.Comparator;

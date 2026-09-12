@@ -1,4 +1,4 @@
-package com.company;
+package count;
 
 import java.util.LinkedList;
 import java.util.List;
