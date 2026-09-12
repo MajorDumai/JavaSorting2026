@@ -2,6 +2,7 @@ package com.company;
 
 import java.util.ArrayList;
 import java.util.List;
+import model.Car;
 
 //import com.company.MyArray;
 
@@ -11,18 +12,19 @@ public class AsyncCountTest {
             0, 0, 2, 1, 2, 3,
             0, 2, 0, 3, 1, 0};
     private static final Car[] CARS = {
-            Car.builder().year(1999)
-                    .model("AAA").power(1000).build(),
-            Car.builder().year(2025)
-                    .model("BBB").power(1900).build(),
-            Car.builder().year(2011)
-                    .model("CCC").power(1290).build(),
-            Car.builder().year(2020)
-                    .model("DDD").power(1680).build(),
-            Car.builder().year(1999)
-                    .model("AAA").power(1000).build(),
-            Car.builder().year(2020)
-                    .model("UNUSED").power(1680).build(),};
+
+            Car.builder().setYear(1999)
+                    .setModel("AAA").setPower(1000).build(),
+            Car.builder().setYear(2025)
+                    .setModel("BBB").setPower(1900).build(),
+            Car.builder().setYear(2011)
+                    .setModel("CCC").setPower(1290).build(),
+            Car.builder().setYear(2020)
+                    .setModel("DDD").setPower(1680).build(),
+            Car.builder().setYear(1999)
+                    .setModel("AAA").setPower(1000).build(),
+            Car.builder().setYear(2020)
+                    .setModel("UNUSED").setPower(1680).build(),};
 
     private static void test(boolean condition) {
         testCount++;

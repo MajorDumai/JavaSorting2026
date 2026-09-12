@@ -1,4 +1,6 @@
-package com.company;
+package strategy;
+
+import strategy.Ignorer;
 
 import java.util.List;
 import java.util.Comparator;
