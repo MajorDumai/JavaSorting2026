@@ -168,7 +168,7 @@ public class Main {
             return;
         }
 
-        System.out.println("\n=== СПИСОК МАШИН ===");
+        System.out.println("\nСПИСОК МАШИН");
         for (int i = 0; i < cars.size(); i++) {
             System.out.printf("%d. %s\n", i + 1, cars.get(i));
         }
