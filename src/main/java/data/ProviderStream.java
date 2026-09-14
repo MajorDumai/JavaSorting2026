@@ -26,9 +26,17 @@ public class ProviderStream {
                     System.out.print(MENU_STR);
                     selection = ScannerUtil.readInt(scanner);
                     switch (selection) {
+                        case 0:
+                            System.out.println("Отмена ввода.");
+                            return List.of();
                         case 1:
+                            final int count;
                             System.out.print("Введите количество машин: ");
-                            final int count = ScannerUtil.readInt(scanner);
+                            count = ScannerUtil.readInt(scanner);
+                            if (count == 0) {
+                                System.out.println("Отмена ввода.");
+                                return List.of();
+                            }
                             cars = DataProvider.generateRandom(count);
                             System.out.println("Добавлено " + cars.size() + " машин.");
                             return cars;
