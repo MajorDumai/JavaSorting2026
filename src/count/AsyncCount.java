@@ -1,11 +1,11 @@
 package count;
 
-import java.util.LinkedList;
+import list.MyArray;
+
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
+import java.util.concurrent.ForkJoinTask;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ExecutionException;
 
 public class AsyncCount {
@@ -41,31 +41,25 @@ public class AsyncCount {
             throw new NullPointerException("AsyncCount.count(): target is null");
         }
         if (list.isEmpty()) {
-            System.err.println("AsyncCount.count(): The list is empty");
+            System.out.println("Список не содержит записей.");
             return 0;
         }
         final int listSize = list.size();
         final int threadsPreferred = (int) Math.ceil((double) listSize / SUBLIST_SIZE);
         final int threadsAvailable = Math.max(Runtime.getRuntime().availableProcessors() - RESERVED_THREADS, 1);
         final int threadsToUse = Math.min(threadsPreferred, threadsAvailable);
-        try (ExecutorService executor = Executors.newFixedThreadPool(threadsToUse)) {
-            final List<Integer> starts = new LinkedList<>();
-            final List<CountCallable<E>> taskList = new LinkedList<>();
-            final List<Future<Integer>> resultList;
+        try (ForkJoinPool executor = new ForkJoinPool(threadsToUse)) {
+            final List<Integer> starts = new MyArray<>();
+            final List<ForkJoinTask<Integer>> resultList = new MyArray<>();
             final int totalResult;
             for (int nextStart = 0; nextStart < listSize; nextStart += SUBLIST_SIZE) {
                 starts.add(nextStart);
             }
             starts.forEach(start -> {
                 final int end = Math.min(start + SUBLIST_SIZE, listSize);
-                taskList.add(new CountCallable<>(list.subList(start, end), target));
+                resultList.add(executor.submit(new CountCallable<>(list.subList(start, end), target)));
             });
-            try {
-                resultList = executor.invokeAll(taskList);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            totalResult = resultList.stream().mapToInt(future -> {
+            totalResult = resultList.stream().parallel().mapToInt(future -> {
                 try {
                     return future.get();
                 } catch (ExecutionException | InterruptedException e) {
