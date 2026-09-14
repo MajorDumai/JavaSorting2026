@@ -28,13 +28,6 @@ public class Car {
         return new Builder();
     }
 
-    /*public Builder toBuilder(){
-        return new Builder()
-                .power(this.power)
-                .model(this.model)
-                .year(this.year);
-    }*/
-
     @Override
     public boolean equals(Object o) {
         if (this==o) return true;

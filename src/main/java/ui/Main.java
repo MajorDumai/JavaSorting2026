@@ -8,7 +8,9 @@ import strategy.SortOption;
 import strategy.SortingManager;
 import util.FileWriterUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class Main {
     private static final String MENU_STR = """
@@ -22,10 +24,10 @@ public class Main {
             0. Выход
             Ваш выбор: """;
 
-    private List<Car> cars;
-    private List<SortOption> sortOptions;
+    private final List<Car> cars;
+    private final List<SortOption> sortOptions;
     private SortOption selectedOption;
-    private Scanner scanner;
+    private final Scanner scanner;
 
     public Main() {
         this.cars = new ArrayList<>();
@@ -43,32 +45,27 @@ public class Main {
         sortOptions.add(new SortOption(
                 "Сортировка по году (все)",
                 new SortingManager<>(null),
-                Car.BY_YEAR,
-                null
+                Car.BY_YEAR
         ));
         sortOptions.add(new SortOption(
                 "Сортировка по году (только четные)",
                 new SortingManager<>(Car.IGNORE_ODD_YEAR),
-                Car.BY_YEAR,
-                Car.IGNORE_ODD_YEAR
+                Car.BY_YEAR
         ));
         sortOptions.add(new SortOption(
                 "Сортировка по году (только нечетные)",
                 new SortingManager<>(Car.IGNORE_EVEN_YEAR),
-                Car.BY_YEAR,
-                Car.IGNORE_EVEN_YEAR
+                Car.BY_YEAR
         ));
         sortOptions.add(new SortOption(
                 "Сортировка по мощности (все)",
                 new SortingManager<>(null),
-                Car.BY_POWER,
-                null
+                Car.BY_POWER
         ));
         sortOptions.add(new SortOption(
                 "Сортировка по модели (все)",
                 new SortingManager<>(null),
-                Car.BY_MODEL,
-                null
+                Car.BY_MODEL
         ));
     }
 

@@ -10,16 +10,13 @@ public class SortOption {
     private final String name;
     private final SortingManager<Car> manager;
     private final Comparator<Car> comparator;
-    private final Ignorer<Car> ignorer;
 
     public SortOption(String name,
                       SortingManager<Car> manager,
-                      Comparator<Car> comparator,
-                      Ignorer<Car> ignorer) {
+                      Comparator<Car> comparator) {
         this.name = name;
         this.manager = manager;
         this.comparator = comparator;
-        this.ignorer = ignorer;
     }
 
     public String getName() {

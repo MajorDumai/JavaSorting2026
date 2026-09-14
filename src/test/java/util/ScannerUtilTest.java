@@ -1,13 +1,10 @@
 package util;
 
-import count.AsyncCount;
 import model.Car;
 
 import java.util.Scanner;
-import java.util.InputMismatchException;
 
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -83,18 +80,16 @@ public class ScannerUtilTest {
     @Test
     @DisplayName("Негативный тест: ошибка границ в запросе числа из отрезка")
     void testReadIntBoundaryError() {
-        String error = "ScannerUtil.readInt(): minimal boundary is equal of higher than maximum";
+        String error = "ScannerUtil.readInt(): minimal boundary is equal or higher than maximum";
         RuntimeException exception = assertThrows(
                 RuntimeException.class,
                 () -> ScannerUtil.readInt(new Scanner("5\n").useDelimiter("\n"), 10, 0, "")
         );
-        assertEquals("ScannerUtil.readInt(): minimal boundary is equal or higher than maximum"
-                , exception.getMessage());
+		assertEquals(error, exception.getMessage());
         exception = assertThrows(
                 RuntimeException.class,
                 () -> ScannerUtil.readInt(new Scanner("5\n").useDelimiter("\n"), 5, 5, "")
         );
-        assertEquals("ScannerUtil.readInt(): minimal boundary is equal or higher than maximum"
-                , exception.getMessage());
+		assertEquals(error, exception.getMessage());
     }
 }
