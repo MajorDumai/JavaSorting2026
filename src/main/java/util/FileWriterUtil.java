@@ -51,7 +51,7 @@ public class FileWriterUtil {
             return;
         }
 
-        Path filePath = Paths.get(filename);
+        Path filePath = Paths.get(String.format("main/resources/%s", filename));
 
         try {
             if (filePath.getParent() != null) {
@@ -118,7 +118,7 @@ public class FileWriterUtil {
             throw new IllegalArgumentException("Имя файла не может быть пустым");
         }
 
-        Path filePath = Paths.get(filename);
+        Path filePath = Paths.get(String.format("main/resources/%s", filename));
         if (!Files.exists(filePath)) {
             return new ArrayList<>();
         }
