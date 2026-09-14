@@ -11,7 +11,11 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class DataProvider {
-    private static final int RND_YEAR_MOD = java.time.Year.now().getValue() - 1899;
+    private static final int RND_POWER_MIN = 1;
+    private static final int RND_POWER_RANGE = 1000 - RND_POWER_MIN + 1;
+    private static final String[] MODELS = {"Tesla", "BMW", "Audi", "Mercedes", "Toyota"};
+    private static final int RND_YEAR_MIN = 1999;
+    private static final int RND_YEAR_RANGE = java.time.Year.now().getValue() - RND_YEAR_MIN + 1;
     private static final String DESCRIPTION = "description";
     private static final String COUNT = "count";
     private static final String DATA = "data";
@@ -21,12 +25,11 @@ public class DataProvider {
 
     public static List<Car> generateRandom(int count) {
         final List<Car> cars = new MyArray<>();
-        final String[] models = {"Tesla", "BMW", "Audi", "Mercedes", "Toyota"};
 
         for (int i = 0; i < count; i++) {
-            final int power = 1 + (int) (Math.random() * 999);
-            final String model = models[(int) (Math.random() * models.length)];
-            final int year = 1900 + (int) (Math.random() * RND_YEAR_MOD);
+            final int power = RND_POWER_MIN + (int) (Math.random() * RND_POWER_RANGE);
+            final String model = MODELS[(int) (Math.random() * MODELS.length)];
+            final int year = RND_YEAR_MIN + (int) (Math.random() * RND_YEAR_RANGE);
             cars.add(new Car(power, model, year));
         }
         return cars;

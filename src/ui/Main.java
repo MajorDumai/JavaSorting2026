@@ -135,14 +135,10 @@ public class Main {
         System.out.println("0. Отмена");
         System.out.print("Выберите вариант: ");
 
-        int choice = ScannerUtil.readInt(scanner);
+        int choice = ScannerUtil.readInt(scanner, 0, sortOptions.size() - 1, "Неверный выбор.");
 
         if (choice == 0) {
             System.out.println("Отмена выбора.");
-            return;
-        }
-        if (choice < 1 || choice > sortOptions.size()) {
-            System.out.println("Неверный выбор.");
             return;
         }
 
@@ -203,13 +199,12 @@ public class Main {
         System.out.println("Введите параметры автомобиля для поиска: ");
         Car targetCar = ScannerUtil.getCar(scanner);
 
-        int count = 0;
-        count= AsyncCount.count(cars, targetCar);
+        final int count = AsyncCount.count(cars, targetCar);
 
         if (count == 0) {
             System.out.println("Машин, совпадающих с " + targetCar + " не найдено.");
         } else {
-            System.out.println("Количество машин с мощностью " + targetCar + ": " + count);
+            System.out.println("Количество машин, совпадающих с " + targetCar + ": " + count);
         }
     }
 
