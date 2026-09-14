@@ -29,7 +29,8 @@ public class ProviderStreamTest {
     @DisplayName("Тест получения данных из файла")
     void testGetDataFromFile() {
         ProviderStream.addToList(carList, new Scanner(FILL_FILE).useDelimiter("\n"));
-        List<Car> testList = DataProvider.readFromFile(FILENAME, new Scanner("1\n").useDelimiter("\n"));
+        DataProvider dataProvider = new FromFileDataProvider();
+        List<Car> testList = dataProvider.getDataSupplier(new Scanner("sorted_cars.json\n1\n").useDelimiter("\n")).get();
         assertEquals(testList.size(), carList.size(), "Ошибка получения данных из файла");
         for (int i = 0, len = carList.size(); i < len; i++) {
             assertEquals(testList.get(i), carList.get(i), "Ошибка получения данных из файла");

@@ -10,17 +10,18 @@ import java.util.Scanner;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class DataProviderTest {
-    private static final String FILENAME = "sorted_cars.json";
+public class FromFileTest {
+    private static final String SCANNER_STR = "\n   \nsorted_cars.json\nabc\n-1\n10\n%d\n";
 
     @Test
     @DisplayName("Тест получения данных из файла")
-    void testReadFromFile() {
+    void testFromFile() {
+        DataProvider dataProvider = new FromFileDataProvider();
         Car car1 = Car.builder().setPower(200).setModel("BMW X5").setYear(2021).build();
         Car car2 = Car.builder().setPower(120).setModel("Lada Vesta").setYear(2022).build();
         Car car3 = Car.builder().setPower(150).setModel("Toyota Camry").setYear(2020).build();
         List<Car> testList = List.of(car1, car2, car3);
-        List<Car> carList = DataProvider.readFromFile(FILENAME, getScanner(1));
+        List<Car> carList = dataProvider.getDataSupplier(getScanner(0)).get();
         assertEquals(testList.size(), carList.size(), "Ошибка чтения из файла");
         for (int i = 0, len = testList.size(); i < len; i++) {
             assertEquals(testList.get(i), carList.get(i), "Ошибка чтения из файла");
@@ -29,7 +30,7 @@ public class DataProviderTest {
         car2 = Car.builder().setPower(150).setModel("Toyota Camry").setYear(2020).build();
         car3 = Car.builder().setPower(200).setModel("BMW X5").setYear(2021).build();
         testList = List.of(car1, car2, car3);
-        carList = DataProvider.readFromFile(FILENAME, getScanner(6));
+        carList = dataProvider.getDataSupplier(getScanner(5)).get();
         assertEquals(testList.size(), carList.size(), "Ошибка чтения из файла");
         for (int i = 0, len = testList.size(); i < len; i++) {
             assertEquals(testList.get(i), carList.get(i), "Ошибка чтения из файла");
@@ -37,31 +38,17 @@ public class DataProviderTest {
     }
 
     @Test
-    @DisplayName("Негативный тест: получение данных с null-строкой имени файла")
-    void testReadFromFileNullFileName() {
-        NullPointerException exception = assertThrows(
-                NullPointerException.class,
-                () -> DataProvider.readFromFile(null, new Scanner("3\n").useDelimiter("\n"))
-        );
-        assertEquals("DataProvider.readFromFile(): Имя файла пустое!", exception.getMessage());
-        exception = assertThrows(
-                NullPointerException.class,
-                () -> DataProvider.readFromFile("  \n  \n ", new Scanner("3\n").useDelimiter("\n"))
-        );
-        assertEquals("DataProvider.readFromFile(): Имя файла пустое!", exception.getMessage());
-    }
-
-    @Test
     @DisplayName("Негативный тест: получение данных с null-scanner")
-    void testReadFromFileNullScanner() {
+    void testFromFileNullScanner() {
+        DataProvider dataProvider = new FromFileDataProvider();
         NullPointerException exception = assertThrows(
                 NullPointerException.class,
-                () -> DataProvider.readFromFile("sorted_cars.json", null)
+                () -> dataProvider.getDataSupplier(null).get()
         );
-        assertEquals("DataProvider.readFromFile(): scanner отсутствует!", exception.getMessage());
+        assertEquals("FromFileDataProvider.getDataSupplier(): scanner отсутствует!", exception.getMessage());
     }
 
     Scanner getScanner(int index) {
-        return new Scanner(String.format("\nabc\n-1\n10\n%d\n", index)).useDelimiter("\n");
+        return new Scanner(SCANNER_STR.formatted(index)).useDelimiter("\n");
     }
 }

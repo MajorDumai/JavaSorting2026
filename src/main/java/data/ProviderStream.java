@@ -3,58 +3,35 @@ package data;
 import util.ScannerUtil;
 import model.Car;
 
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class ProviderStream {
-    private static final String MENU_STR = """
-            \n--- Заполнение массива данными ---
-            1. Рандом
-            2. Из файла
-            3. Вручную
-            Выберите вариант: """;
+    private static final List<DataProvider> DATA_PROVIDERS = List.of(
+            new RandomDataProvider(),
+            new FromFileDataProvider(),
+            new FromConsoleDataProvider()
+    );
+    private static final int SIZE = DATA_PROVIDERS.size();
 
     private static Stream<List<Car>> getDataList(Scanner scanner) {
-        final Supplier<List<Car>> readData = () -> {
-            while (true) {
-                try {
-                    final int selection;
-                    final List<Car> cars;
-                    System.out.print(MENU_STR);
-                    selection = ScannerUtil.readInt(scanner);
-                    switch (selection) {
-                        case 1:
-                            System.out.print("Введите количество машин: ");
-                            final int count = ScannerUtil.readInt(scanner);
-                            cars = DataProvider.generateRandom(count);
-                            System.out.println("Добавлено " + cars.size() + " машин.");
-                            return cars;
-                        case 2:
-                            System.out.print("Введите имя файла: ");
-                            final String fileName = ScannerUtil.readString(scanner, "Имя файла пустое");
-                            cars = DataProvider.readFromFile(fileName, scanner);
-                            System.out.println("Загружено " + cars.size() + " машин из файла.");
-                            return cars;
-                        case 3:
-                            cars = DataProvider.readFromConsole(scanner);
-                            System.out.println("Добавлено " + cars.size() + " машин.");
-                            return cars;
-                        default:
-                            System.out.println("Ошибка: нет данного выбора!");
-                    }
-                } catch (InputMismatchException e) {
-                    System.out.println("Ошибка: введите число!");
-                }
+        Supplier<Supplier<List<Car>>> pickStrategy = () -> {
+            final int providerId;
+            for (int i = 0; i < SIZE; i++) {
+                System.out.printf("%d. %s.\n", i + 1, DATA_PROVIDERS.get(i));
             }
+            System.out.print("Выберите вариант: ");
+            providerId = ScannerUtil.readInt(scanner, 1, SIZE, "Неподходящий выбор") - 1;
+            return DATA_PROVIDERS.get(providerId).getDataSupplier(scanner);
         };
 
         if (scanner == null) {
             throw new NullPointerException("ProviderStream.getDataList(): scanner отсутствует!");
         }
-        return Stream.of(readData)
+        return Stream.of(pickStrategy)
+                .map(Supplier::get)
                 .map(Supplier::get);
     }
 
