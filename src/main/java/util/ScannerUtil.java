@@ -9,6 +9,9 @@ public class ScannerUtil {
     private static final int YEAR = java.time.Year.now().getValue();
 
     public static int readInt(Scanner scanner) {
+        if (scanner == null) {
+            throw new NullPointerException("ScannerUtil.readInt(): scanner is null");
+        }
         while (true) {
             try {
                 final int number = scanner.nextInt();
@@ -26,6 +29,12 @@ public class ScannerUtil {
     }
 
     public static int readInt(Scanner scanner, int min, int max, String errorMessage) {
+        if (scanner == null) {
+            throw new NullPointerException("ScannerUtil.readInt(): scanner is null");
+        }
+        if (min >= max) {
+            throw new RuntimeException("ScannerUtil.readInt(): minimal boundary is equal of higher than maximum");
+        }
         while (true) {
             try {
                 final int number = scanner.nextInt();
@@ -43,6 +52,9 @@ public class ScannerUtil {
     }
 
     public static String readString(Scanner scanner, String emptyMessage) {
+        if (scanner == null) {
+            throw new NullPointerException("ScannerUtil.readString(): scanner is null");
+        }
         while (true) {
             final String string = scanner.next();
             if (string != null && !string.isBlank()) {
@@ -55,6 +67,9 @@ public class ScannerUtil {
     }
 
     public static Car getCar(Scanner scanner) {
+        if (scanner == null) {
+            throw new NullPointerException("ScannerUtil.getCar(): scanner is null");
+        }
         final int power;
         final String model;
         final int year;
