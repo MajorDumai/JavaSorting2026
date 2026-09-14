@@ -34,10 +34,10 @@ public class AsyncCount {
     }
 
     public static <E> int count(List<E> list, E target) {
-        if (target == null) {
+        if (list == null) {
             throw new NullPointerException("AsyncCount.count(): list is null");
         }
-        if (list == null) {
+        if (target == null) {
             throw new NullPointerException("AsyncCount.count(): target is null");
         }
         if (list.isEmpty()) {

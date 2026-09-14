@@ -28,8 +28,8 @@ public class ProviderStreamTest {
     @Test
     @DisplayName("Тест получения данных из файла")
     void testGetDataFromFile() {
-        ProviderStream.addToList(carList, new Scanner(FILL_FILE));
-        List<Car> testList = DataProvider.readFromFile(FILENAME, new Scanner("1\n"));
+        ProviderStream.addToList(carList, new Scanner(FILL_FILE).useDelimiter("\n"));
+        List<Car> testList = DataProvider.readFromFile(FILENAME, new Scanner("1\n").useDelimiter("\n"));
         assertEquals(testList.size(), carList.size(), "Ошибка получения данных из файла");
         for (int i = 0, len = carList.size(); i < len; i++) {
             assertEquals(testList.get(i), carList.get(i), "Ошибка получения данных из файла");
@@ -39,19 +39,21 @@ public class ProviderStreamTest {
     @Test
     @DisplayName("Тест получения данных с консоли")
     void testGetDataFromConsole() {
-        ProviderStream.addToList(carList, new Scanner(FILL_CONSOLE));
-        Car car = ScannerUtil.getCar(new Scanner(DATA));
+        ProviderStream.addToList(carList, new Scanner(FILL_CONSOLE).useDelimiter("\n"));
+        Car car = ScannerUtil.getCar(new Scanner(DATA).useDelimiter("\n"));
         assertEquals(CAR_COUNT, AsyncCount.count(carList, car), "Ошибка получения данных с консоли");
     }
 
     @Test
     @DisplayName("Тест получения данных случайной генерацией, проверка добавления и перезаписывания")
     void testGetDataRandom() {
-        ProviderStream.addToList(carList, new Scanner(FILL_RANDOM));
+        ProviderStream.addToList(carList, new Scanner(FILL_RANDOM).useDelimiter("\n"));
+        carList.forEach(System.out::println);
         assertEquals(CAR_COUNT, carList.size(), "Ошибка получения случайных данных");
-        ProviderStream.addToList(carList, new Scanner(FILL_RANDOM));
-        assertEquals(CAR_COUNT, carList.size() * 2, "Ошибка добавления данных");
-        ProviderStream.overwriteList(carList, new Scanner(FILL_RANDOM));
+        ProviderStream.addToList(carList, new Scanner(FILL_RANDOM).useDelimiter("\n"));
+        carList.forEach(System.out::println);
+        assertEquals(CAR_COUNT * 2, carList.size(), "Ошибка добавления данных");
+        ProviderStream.overwriteList(carList, new Scanner(FILL_RANDOM).useDelimiter("\n"));
         assertEquals(CAR_COUNT, carList.size(), "Ошибка перезаписывания данных");
     }
 
@@ -60,12 +62,12 @@ public class ProviderStreamTest {
     void testGetDataNullList() {
         NullPointerException exception = assertThrows(
                 NullPointerException.class,
-                () -> ProviderStream.addToList(null, new Scanner(FILL_RANDOM))
+                () -> ProviderStream.addToList(null, new Scanner(FILL_RANDOM).useDelimiter("\n"))
         );
         assertEquals("ProviderStream.addToList(): carList отсутствует!", exception.getMessage());
         exception = assertThrows(
                 NullPointerException.class,
-                () -> ProviderStream.overwriteList(null, new Scanner(FILL_RANDOM))
+                () -> ProviderStream.overwriteList(null, new Scanner(FILL_RANDOM).useDelimiter("\n"))
         );
         assertEquals("ProviderStream.overwriteList(): carList отсутствует!", exception.getMessage());
     }

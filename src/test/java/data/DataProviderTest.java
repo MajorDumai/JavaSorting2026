@@ -24,7 +24,7 @@ public class DataProviderTest {
         Car car2 = Car.builder().setPower(120).setModel("Lada Vesta").setYear(2022).build();
         Car car3 = Car.builder().setPower(150).setModel("Toyota Camry").setYear(2020).build();
         List<Car> testList = List.of(car1, car2, car3);
-        List<Car> carList = DataProvider.readFromFile("sorted_cars.json", new Scanner("3\n"));
+        List<Car> carList = DataProvider.readFromFile("sorted_cars.json", new Scanner("3\n").useDelimiter("\n"));
         assertEquals(testList.size(), carList.size(), "Ошибка чтения из файла");
         for (int i = 0, len = testList.size(); i < len; i++) {
             assertEquals(testList.get(i), carList.get(i), "Ошибка чтения из файла");
@@ -36,12 +36,12 @@ public class DataProviderTest {
     void testReadFromFileNullFileName() {
         NullPointerException exception = assertThrows(
                 NullPointerException.class,
-                () -> DataProvider.readFromFile(null, new Scanner("3\n"))
+                () -> DataProvider.readFromFile(null, new Scanner("3\n").useDelimiter("\n"))
         );
         assertEquals("DataProvider.readFromFile(): Имя файла пустое!", exception.getMessage());
         exception = assertThrows(
                 NullPointerException.class,
-                () -> DataProvider.readFromFile("  \n  \n ", new Scanner("3\n"))
+                () -> DataProvider.readFromFile("  \n  \n ", new Scanner("3\n").useDelimiter("\n"))
         );
         assertEquals("DataProvider.readFromFile(): Имя файла пустое!", exception.getMessage());
     }
