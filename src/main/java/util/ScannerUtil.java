@@ -23,7 +23,6 @@ public class ScannerUtil {
             } catch (InputMismatchException e) {
                 scanner.nextLine();
                 System.out.println("Ошибка! Введите число!");
-            } finally {
                 System.out.print("Попробуйте снова: ");
             }
         }
@@ -47,7 +46,6 @@ public class ScannerUtil {
             } catch (InputMismatchException e) {
                 scanner.nextLine();
                 System.out.println("Ошибка! введите число!");
-            } finally {
                 System.out.print("Попробуйте снова: ");
             }
         }

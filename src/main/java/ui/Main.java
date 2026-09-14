@@ -73,8 +73,9 @@ public class Main {
         System.out.println("*** Добро пожаловать в программу сортировки автомобилей ***");
 
         while (true) {
+            final int choice;
             System.out.print(MENU_STR);
-            int choice = ScannerUtil.readInt(scanner);
+            choice = ScannerUtil.readInt(scanner, 0, 6, "Неверный выбор");
 
             switch (choice) {
                 case 1:
@@ -98,8 +99,6 @@ public class Main {
                 case 0:
                     System.out.println("Выход из программы. До свидания!");
                     return;
-                default:
-                    System.out.println("Неверный выбор. Попробуйте снова.");
             }
         }
     }
