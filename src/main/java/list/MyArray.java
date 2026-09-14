@@ -1,6 +1,8 @@
 package list;
 
-import java.util.*;
+import java.util.AbstractList;
+import java.util.Arrays;
+import java.util.Collection;
 
 public class MyArray<E> extends AbstractList<E> {
     private Object[] data;
