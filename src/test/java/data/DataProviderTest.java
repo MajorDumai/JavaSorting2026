@@ -17,6 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class DataProviderTest {
+    private static final String FILENAME = "sorted_cars.json";
+
     @Test
     @DisplayName("Тест получения данных из файла")
     void testReadFromFile() {
@@ -24,7 +26,16 @@ public class DataProviderTest {
         Car car2 = Car.builder().setPower(120).setModel("Lada Vesta").setYear(2022).build();
         Car car3 = Car.builder().setPower(150).setModel("Toyota Camry").setYear(2020).build();
         List<Car> testList = List.of(car1, car2, car3);
-        List<Car> carList = DataProvider.readFromFile("sorted_cars.json", new Scanner("3\n").useDelimiter("\n"));
+        List<Car> carList = DataProvider.readFromFile(FILENAME, getScanner(1));
+        assertEquals(testList.size(), carList.size(), "Ошибка чтения из файла");
+        for (int i = 0, len = testList.size(); i < len; i++) {
+            assertEquals(testList.get(i), carList.get(i), "Ошибка чтения из файла");
+        }
+        car1 = Car.builder().setPower(120).setModel("Lada Vesta").setYear(2022).build();
+        car2 = Car.builder().setPower(150).setModel("Toyota Camry").setYear(2020).build();
+        car3 = Car.builder().setPower(200).setModel("BMW X5").setYear(2021).build();
+        testList = List.of(car1, car2, car3);
+        carList = DataProvider.readFromFile(FILENAME, getScanner(6));
         assertEquals(testList.size(), carList.size(), "Ошибка чтения из файла");
         for (int i = 0, len = testList.size(); i < len; i++) {
             assertEquals(testList.get(i), carList.get(i), "Ошибка чтения из файла");
@@ -54,5 +65,9 @@ public class DataProviderTest {
                 () -> DataProvider.readFromFile("sorted_cars.json", null)
         );
         assertEquals("DataProvider.readFromFile(): scanner отсутствует!", exception.getMessage());
+    }
+
+    Scanner getScanner(int index) {
+        return new Scanner(String.format("\nabc\n-1\n10\n%d\n", index)).useDelimiter("\n");
     }
 }

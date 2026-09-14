@@ -45,13 +45,16 @@ public class DataProvider {
         try {
             final List<Map<String, Object>> entries = FileWriterUtil.readAllEntries(fileName);
             for (int i = 0, len = entries.size(); i < len; i++) {
-                printListEntry(i + 1, entries.get(i));
+                final Map<String, Object> entry = entries.get(i);
+                final String description = (String) entry.get(DESCRIPTION);
+                final int count = (int) entry.get(COUNT);
+                System.out.println((i + 1) + ". " + description + " - " + count + " записей");
             }
             final int selection;
             final List<Car> cars = new MyArray<>();
             final List<Map<String, Object>> data;
             System.out.print("Выберите список из файла: ");
-            selection = ScannerUtil.readInt(scanner, 1, entries.size() - 1, "Выбранного списка нет");
+            selection = ScannerUtil.readInt(scanner, 1, entries.size(), "Выбранного списка нет") - 1;
             data = (List<Map<String, Object>>) entries.get(selection).get(DATA);
             for (Map<String, Object> jsonCar : data) {
                 final int power = (int) jsonCar.get(POWER);
@@ -81,11 +84,5 @@ public class DataProvider {
 
         System.out.println("\nВсего добавлено машин: " + cars.size());
         return cars;
-    }
-
-    private static void printListEntry(int index, Map<String, Object> entry) {
-        final String description = (String) entry.get(DESCRIPTION);
-        final int count = (int) entry.get(COUNT);
-        System.out.printf("%d. %s - %d записей\n", index, description, count);
     }
 }
