@@ -83,17 +83,17 @@ public class ScannerUtilTest {
     @DisplayName("Негативный тест: ошибка границ в запросе числа из отрезка")
     void testReadIntBoundaryError() {
         String error = "ScannerUtil.readInt(): minimal boundary is equal of higher than maximum";
-        NullPointerException exception = assertThrows(
-                NullPointerException.class,
+        RuntimeException exception = assertThrows(
+                RuntimeException.class,
                 () -> ScannerUtil.readInt(new Scanner("5\n"), 10, 0, "")
         );
-        assertEquals("ScannerUtil.readInt(): minimal boundary is equal of higher than maximum"
+        assertEquals("ScannerUtil.readInt(): minimal boundary is equal or higher than maximum"
                 , exception.getMessage());
         exception = assertThrows(
-                NullPointerException.class,
+                RuntimeException.class,
                 () -> ScannerUtil.readInt(new Scanner("5\n"), 5, 5, "")
         );
-        assertEquals("ScannerUtil.readInt(): minimal boundary is equal of higher than maximum"
+        assertEquals("ScannerUtil.readInt(): minimal boundary is equal or higher than maximum"
                 , exception.getMessage());
     }
 }

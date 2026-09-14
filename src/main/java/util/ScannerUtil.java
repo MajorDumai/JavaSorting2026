@@ -33,7 +33,7 @@ public class ScannerUtil {
             throw new NullPointerException("ScannerUtil.readInt(): scanner is null");
         }
         if (min >= max) {
-            throw new RuntimeException("ScannerUtil.readInt(): minimal boundary is equal of higher than maximum");
+            throw new RuntimeException("ScannerUtil.readInt(): minimal boundary is equal or higher than maximum");
         }
         while (true) {
             try {
