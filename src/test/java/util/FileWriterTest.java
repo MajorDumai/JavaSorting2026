@@ -1,4 +1,4 @@
-package com.company.test;
+package util;
 
 import model.Car;
 import strategy.SortingManager;
@@ -37,7 +37,7 @@ public class FileWriterTest {
         cars.add(car2);
         cars.add(car3);
 
-        String fileName = "sorted_cars.json";
+        String fileName = "sorted_cars_2.json";
 
         System.out.println("Тест 1: Запись отсортированных по модели автомобилей");
         SortingManager<Car> sorter = new SortingManager<>(null);

@@ -4,7 +4,7 @@ import model.Car;
 import java.util.List;
 import java.util.Comparator;
 
-public interface SortingStrategy {
+public interface SortingStrategy<T> {
 
-    void sort(List<Car> cars, Comparator<Car> comparator);
+    void sort(List<T> list, Comparator<? super T> comparator);
 }
