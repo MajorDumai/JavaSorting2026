@@ -75,7 +75,7 @@ public class Main {
         while (true) {
             final int choice;
             System.out.print(MENU_STR);
-            choice = ScannerUtil.readInt(scanner, 0, 6, "Неверный выбор");
+            choice = ScannerUtil.readInt(scanner);
 
             switch (choice) {
                 case 1:
@@ -99,6 +99,8 @@ public class Main {
                 case 0:
                     System.out.println("Выход из программы. До свидания!");
                     return;
+                default:
+                    System.out.println("Неверный выбор");
             }
         }
     }
@@ -131,10 +133,14 @@ public class Main {
         System.out.println("0. Отмена");
         System.out.print("Выберите вариант: ");
 
-        int choice = ScannerUtil.readInt(scanner, 0, sortOptions.size() - 1, "Неверный выбор.");
+        int choice = ScannerUtil.readInt(scanner);
 
         if (choice == 0) {
             System.out.println("Отмена выбора.");
+            return;
+        }
+        if (choice >= sortOptions.size()) {
+            System.out.println("Неверный выбор.");
             return;
         }
 

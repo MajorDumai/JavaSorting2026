@@ -15,7 +15,7 @@ public class ScannerUtil {
         while (true) {
             try {
                 final int number = scanner.nextInt();
-                if (number > 0) {
+                if (number >= 0) {
                     return number;
                 } else {
                     System.out.println("Ошибка! Ввод должен быть больше нуля!");

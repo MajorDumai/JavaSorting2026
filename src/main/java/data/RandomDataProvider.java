@@ -23,6 +23,10 @@ public class RandomDataProvider extends DataProvider {
             final List<Car> cars = new MyArray<>();
             System.out.print("Введите количество машин: ");
             count = ScannerUtil.readInt(scanner);
+            if (count == 0) {
+                System.out.println("Отмена вводаю");
+                return List.of();
+            }
             for (int i = 0; i < count; i++) {
                 final int power = RND_POWER_MIN + (int) (Math.random() * RND_POWER_RANGE);
                 final String model = MODELS[(int) (Math.random() * MODELS.length)];

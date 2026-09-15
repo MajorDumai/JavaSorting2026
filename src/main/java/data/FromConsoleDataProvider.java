@@ -18,6 +18,10 @@ public class FromConsoleDataProvider extends DataProvider {
             final int count;
             System.out.print("Сколько машин хотите ввести? ");
             count = ScannerUtil.readInt(scanner);
+            if (count == 0) {
+                System.out.println("Отмена вводаю");
+                return List.of();
+            }
             for (int i = 0; i < count; i++) {
                 final Car car;
                 System.out.printf("\n--- Машина %d из %d ---\n", i + 1, count);

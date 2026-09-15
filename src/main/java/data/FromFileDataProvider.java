@@ -38,10 +38,10 @@ public class FromFileDataProvider extends DataProvider {
                     final Map<String, Object> entry = entries.get(i);
                     final String description = (String) entry.get(DESCRIPTION);
                     final int count = (int) entry.get(COUNT);
-                    System.out.println(i + ". " + description + " - " + count + " записей");
+                    System.out.println((i + 1) + ". " + description + " - " + count + " записей");
                 }
                 System.out.print("Выберите список из файла: ");
-                selection = ScannerUtil.readInt(scanner, 0, entries.size() - 1, "Выбранного списка нет");
+                selection = ScannerUtil.readInt(scanner, 1, entries.size(), "Выбранного списка нет") - 1;
                 data = (List<Map<String, Object>>) entries.get(selection).get(DATA);
                 for (Map<String, Object> jsonCar : data) {
                     final int power = (int) jsonCar.get(POWER);

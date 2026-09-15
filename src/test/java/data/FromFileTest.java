@@ -21,7 +21,7 @@ public class FromFileTest {
         Car car2 = Car.builder().setPower(120).setModel("Lada Vesta").setYear(2022).build();
         Car car3 = Car.builder().setPower(150).setModel("Toyota Camry").setYear(2020).build();
         List<Car> testList = List.of(car1, car2, car3);
-        List<Car> carList = dataProvider.getDataSupplier(getScanner(0)).get();
+        List<Car> carList = dataProvider.getDataSupplier(getScanner(1)).get();
         assertEquals(testList.size(), carList.size(), "Ошибка чтения из файла");
         for (int i = 0, len = testList.size(); i < len; i++) {
             assertEquals(testList.get(i), carList.get(i), "Ошибка чтения из файла");
@@ -30,7 +30,7 @@ public class FromFileTest {
         car2 = Car.builder().setPower(150).setModel("Toyota Camry").setYear(2020).build();
         car3 = Car.builder().setPower(200).setModel("BMW X5").setYear(2021).build();
         testList = List.of(car1, car2, car3);
-        carList = dataProvider.getDataSupplier(getScanner(5)).get();
+        carList = dataProvider.getDataSupplier(getScanner(6)).get();
         assertEquals(testList.size(), carList.size(), "Ошибка чтения из файла");
         for (int i = 0, len = testList.size(); i < len; i++) {
             assertEquals(testList.get(i), carList.get(i), "Ошибка чтения из файла");
