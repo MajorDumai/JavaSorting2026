@@ -24,7 +24,7 @@ public class RandomDataProvider extends DataProvider {
             System.out.print("Введите количество машин: ");
             count = ScannerUtil.readInt(scanner);
             if (count == 0) {
-                System.out.println("Отмена вводаю");
+                System.out.println("Отмена ввода.");
                 return List.of();
             }
             for (int i = 0; i < count; i++) {

@@ -19,7 +19,7 @@ public class FromConsoleDataProvider extends DataProvider {
             System.out.print("Сколько машин хотите ввести? ");
             count = ScannerUtil.readInt(scanner);
             if (count == 0) {
-                System.out.println("Отмена вводаю");
+                System.out.println("Отмена ввода.");
                 return List.of();
             }
             for (int i = 0; i < count; i++) {
